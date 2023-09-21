@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const hashtagSchema = new mongoose.Schema(
   {
-    title: {
+    hashtag: {
       type: String,
       required: true,
     },

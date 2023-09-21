@@ -10,18 +10,12 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    author: {
+    userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    hashtags: {
-      type: Array,
-      of: {
-        type: String,
-      },
-    },
-    authorName: {
+    userName: {
       type: String,
       ref: "User",
       default: "",
