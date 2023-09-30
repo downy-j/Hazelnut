@@ -6,15 +6,14 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 // DB 불러오기
-const connect = require("./Schemas");
+const connectDB = require("./config/db");
 // 라우트 불러오기
-const authRouter = require("./Routes/authRoute");
 
 const app = express();
 app.set("port", process.env.PORT || 5000);
 
 //DB 연결
-connect();
+connectDB();
 
 // 미들웨어
 app.use(morgan("dev"));
@@ -22,9 +21,20 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  })
+);
 
 // 라우트 연결
-app.use("/api/auth", authRouter); // 계정 라우트
+// 계정 라우트
 
 // C = post(), R = get(), U = put(), D = delete()
 app.get("/", (req, res) => {
