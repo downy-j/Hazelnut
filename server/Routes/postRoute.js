@@ -40,7 +40,7 @@ const nunImages = multer();
 router.post("/create/img", images.single("img"), addUploadImage);
 router.post("/create", nunImages.none(), createPost);
 
-router.get("/get", getAllPost);
+router.get("/get", getAllPost); // OK
 router.get("/get/:id", getOnePost);
 router.patch("/upd/:id", updatePost);
 router.delete("/del/:id", deletePost);

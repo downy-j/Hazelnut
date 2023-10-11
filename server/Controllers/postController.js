@@ -17,9 +17,10 @@ const createPost = async (req, res) => {
     const post = await new postModel({
       title,
       content,
-      img: img,
+      img: req.body.url,
       writer,
-      likes: 0,
+      likes,
+      likeCount: 0,
       hashtag: result,
     });
 

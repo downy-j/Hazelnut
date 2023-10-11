@@ -13,6 +13,8 @@ connectDB();
 // 라우트 불러오기
 const authRoute = require("./Routes/authRoute");
 const postRoute = require("./Routes/postRoute");
+const crRoute = require("./Routes/chatRoomRoute");
+const messageRoute = require("./Routes/messageRoute");
 
 const app = express();
 app.set("port", process.env.PORT || 5000);
@@ -37,6 +39,8 @@ app.use(
 // 라우트 연결
 app.use("/api/auth", authRoute); // 등록관련 라우트
 app.use("/api/post", postRoute); // 게시글 포스팅 라우트
+app.use("/api/chatRoom", crRoute); // 채팅방 생성, 찾기 등..
+app.use("/api/message", messageRoute); // 메세지 생성 찾기 등..
 
 // C = post(), R = get(), U = put(), D = delete()
 app.get("/", (req, res) => {
