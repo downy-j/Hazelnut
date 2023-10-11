@@ -7,16 +7,15 @@ require("dotenv").config();
 
 // DB 불러오기
 const connectDB = require("./config/db");
-
-// 라우트 불러오기
-const authRoute = require("./Routes/authRoute");
-
-const app = express();
-app.set("port", process.env.PORT || 5000);
-
 //DB 연결
 connectDB();
 
+// 라우트 불러오기
+const authRoute = require("./Routes/authRoute");
+const postRoute = require("./Routes/postRoute");
+
+const app = express();
+app.set("port", process.env.PORT || 5000);
 // 미들웨어
 app.use(morgan("dev"));
 app.use(express.json());
@@ -37,6 +36,7 @@ app.use(
 
 // 라우트 연결
 app.use("/api/auth", authRoute); // 등록관련 라우트
+app.use("/api/post", postRoute); // 게시글 포스팅 라우트
 
 // C = post(), R = get(), U = put(), D = delete()
 app.get("/", (req, res) => {
