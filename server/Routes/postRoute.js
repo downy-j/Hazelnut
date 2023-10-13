@@ -6,11 +6,10 @@ const fs = require("fs");
 const {
   addUploadImage,
   createPost,
-  getAllPost,
-  getOnePost,
+  getPosts,
+  getPost,
   updatePost,
   deletePost,
-  likePost,
 } = require("../Controllers/postController");
 
 const router = express.Router();
@@ -40,11 +39,9 @@ const nunImages = multer();
 router.post("/create/img", images.single("img"), addUploadImage);
 router.post("/create", nunImages.none(), createPost);
 
-router.get("/get", getAllPost); // OK
-router.get("/get/:id", getOnePost);
+router.get("/get", getPosts); // OK
+router.get("/get/:id", getPost);
 router.patch("/upd/:id", updatePost);
 router.delete("/del/:id", deletePost);
-router.patch("/like/:id", likePost);
-// router.patch("/unlike/:id", unlikePost);
 
 module.exports = router;

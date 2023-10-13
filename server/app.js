@@ -11,7 +11,7 @@ const connectDB = require("./config/db");
 connectDB();
 
 // 라우트 불러오기
-const authRoute = require("./Routes/authRoute");
+const authRoute = require("./Routes/userRoute");
 const postRoute = require("./Routes/postRoute");
 const crRoute = require("./Routes/chatRoomRoute");
 const messageRoute = require("./Routes/messageRoute");

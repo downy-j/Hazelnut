@@ -1,24 +1,15 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-const PostModel = new Schema(
+const notificationModel = new Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
     content: {
       type: String,
       required: true,
     },
-    img: {
-      type: String,
-      required: false,
-    },
-    writer: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
   },
   {
@@ -26,4 +17,4 @@ const PostModel = new Schema(
   }
 );
 
-module.exports = mongoose.model("Post", PostModel);
+module.exports = mongoose.model("Notification", notificationModel);
