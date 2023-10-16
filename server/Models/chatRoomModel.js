@@ -3,9 +3,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const chatRoomSchema = new Schema(
   {
-    roomName: {
+    title: {
       type: String,
-      required: true,
     },
     participants: [
       {

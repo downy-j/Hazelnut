@@ -31,29 +31,26 @@ Nosql인 mongoDB를 사용
 
 ## User
 
-- createToken : 유저 토근화 (✔️)
-- registerUser : 유저 등록 (✔️)
-- loginUser : 유저 로그인 (✔️)
-- findUser : 유저 찾기 (✔️)
-- getUsers : 유저들 찾기 (✔️)
-- updateUser : 유저 업데이트
-- logoutUser : 유저 로그아웃
+- findUser : 유저 찾기 (✔️)\_10.16
+- getUsers : 유저들 찾기 (✔️)\_10.16
+- updateUser : 유저 업데이트(✔️)\_10.16
+- follow : 유저 팔로우 ( )
+- unfollow : 유저 언팔로잉 ( )
 
-## Authentication
+## Auth
 
-- authenticateUser : 유저 인증 상태 확인 후 인증된 유저만 접근을 관리
-
-## Authorization
-
-- authorizeUser : 유저 권한을 확인 후 특정 작업 수행 할수 있는지 확인
+- createToken : 유저 토근화 (✔️)\_10.16
+- registerUser : 유저 등록 (✔️)\_10.16
+- loginUser : 유저 로그인 (✔️)\_10.16
+- logoutUser : 유저 로그아웃 (✔️)\_10.16
 
 ## Post
 
-- createPost : 새 포스트 생성
-- getPosts : 전체 포스트 가져오기 (✔️)
-- getPost : 특정 포스트 가져오기 (✔️)
-- updatePost : 특정 포스트 수정 (✔️)
-- deletePost : 특성 포스트 삭제 (✔️)
+- createPost : 새 포스트 생성()
+- getPosts : 전체 포스트 가져오기 ()
+- getPost : 특정 포스트 가져오기 ()
+- updatePost : 특정 포스트 수정 ()
+- deletePost : 특성 포스트 삭제 ()
 
 ## Hashtag
 

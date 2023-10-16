@@ -14,7 +14,7 @@ const likeDislikeModel = new Schema(
     type: {
       type: String,
       enum: ["like", "dislike"],
-      require: true,
+      require: false,
     },
   },
   {

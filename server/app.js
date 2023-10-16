@@ -11,10 +11,11 @@ const connectDB = require("./config/db");
 connectDB();
 
 // 라우트 불러오기
-const authRoute = require("./Routes/userRoute");
+const authRoute = require("./Routes/authRoute");
+const userRoute = require("./Routes/userRoute");
 const postRoute = require("./Routes/postRoute");
-const crRoute = require("./Routes/chatRoomRoute");
-const messageRoute = require("./Routes/messageRoute");
+// const chatRoomRoute = require("./Routes/chatRoomRoute");
+// const messageRoute = require("./Routes/messageRoute");
 
 const app = express();
 app.set("port", process.env.PORT || 5000);
@@ -26,21 +27,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
+    resave: false, // 세션 데이터를 변경하지 않더라도 다시 저장할지 여부
+    saveUninitialized: false, // 초기화되지 않은 세션을 저장할지 여부
+    secret: process.env.COOKIE_SECRET, // 세션 데이터 암호화를 위한 시크릿 키
     cookie: {
+      // 세션 쿠키 설정 (보안 연결 필요 여부 등)
       httpOnly: true,
-      secure: false,
+      secure: false, //보안 연결(HTTPS)을 사용하지 않아도 쿠키를 전송 가능함.
     },
   })
 );
 
 // 라우트 연결
-app.use("/api/auth", authRoute); // 등록관련 라우트
+app.use("/api/auth", authRoute); // 유저 등록, 인증, 권한 라우트
+app.use("/api/user", userRoute); // 유저(들) 찾기, 팔로우/언팔로우
 app.use("/api/post", postRoute); // 게시글 포스팅 라우트
-app.use("/api/chatRoom", crRoute); // 채팅방 생성, 찾기 등..
-app.use("/api/message", messageRoute); // 메세지 생성 찾기 등..
+//app.use("/api/chatRoom", chatRoomRoute); // 채팅방 생성, 찾기 등..
+//app.use("/api/message", messageRoute); // 메세지 생성 찾기 등..
 
 // C = post(), R = get(), U = put(), D = delete()
 app.get("/", (req, res) => {

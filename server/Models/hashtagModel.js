@@ -5,7 +5,7 @@ const hashtagsModel = new Schema(
   {
     hashtags: {
       type: String,
-      required: true,
+      required: false,
     },
     postId: [
       {
