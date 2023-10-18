@@ -74,8 +74,9 @@ const updateUser = async (req, res) => {
 /**
  * follow
  * 역활 : 팔로우
- * 구현 :
- * 사용 예시 :
+ * 구현 : 유저가 다른 유저를 팔로우 하는 기능을 구현.
+ * 이미 팔로우  한 유저는 다시 팔로우 할 수 없다
+ * 사용 예시 : client에서 팔로우 기능을 호출 할때 사용
  *
  */
 const follow = async (req, res) => {

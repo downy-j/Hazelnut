@@ -12,6 +12,7 @@ const addUploadImage = (req, res) => {
   console.log(req.file);
   res.json({ url: `/img/${req.file.filename}` });
 };
+
 /**
  * createPost
  * 역활 : 게시물을 생성하고 데이터베이스에 저장
@@ -20,7 +21,12 @@ const addUploadImage = (req, res) => {
  */
 const createPost = async (req, res) => {
   try {
-    const { title, content, img, writer } = req.body;
+    let imgURL = null;
+    if (req.file) {
+      imgURL = addUploadImage(req, res);
+    }
+
+    const { title, content, writer } = req.body;
 
     const hashtags = req.body.content.match(/#[^\s#]*/g);
     const result = hashtags
@@ -30,11 +36,9 @@ const createPost = async (req, res) => {
     const post = await new postModel({
       title,
       content,
-      img: req.body.url,
+      img: imgURL,
       writer,
-      likes,
-      likeCount: 0,
-      hashtag: result,
+      hashtags: result,
     });
 
     const savePost = await post.save();
@@ -77,7 +81,7 @@ const getPosts = async (req, res) => {
  * 사용 예시 : 유저가 특정 게시물을 조회하려 할 때, server에 "getPost" 요청
  */
 const getPost = async (req, res) => {
-  const postId = req.params.userId;
+  const postId = req.params.id;
   try {
     const post = await postModel.findOne({ _id: postId });
 
@@ -113,7 +117,7 @@ const updatePost = async (req, res) => {
       { $set: updates }
     );
 
-    if (updatedPost.nModified > 0) {
+    if (updatedPost.nModified < 1) {
       const updatedPostInfo = await postModel.findById(req.params.id);
       res.status(200).json(updatedPostInfo);
     } else {

@@ -12,6 +12,8 @@ const {
   deletePost,
 } = require("../Controllers/postController");
 
+const { likePost } = require("../Controllers/likeDislikeController");
+
 const router = express.Router();
 
 try {
@@ -21,27 +23,29 @@ try {
   fs.mkdirSync("uploads");
 }
 
-const images = multer({
+const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
       cb(null, "uploads/");
     },
     filename(req, file, cb) {
       const ext = path.extname(file.originalname);
-      cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+      cb(null, path.basename(file.originalname, ext) + Date.now + ext);
     },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-const nunImages = multer();
+router.post("/create/img", upload.single("img"), addUploadImage);
 
-router.post("/create/img", images.single("img"), addUploadImage);
-router.post("/create", nunImages.none(), createPost);
+const upload2 = multer();
+router.post("/create", upload2.none(), createPost);
 
-router.get("/get", getPosts); // OK
-router.get("/get/:id", getPost);
-router.patch("/upd/:id", updatePost);
-router.delete("/del/:id", deletePost);
+router.get("/get", getPosts); // 전부 가져오기
+router.get("/get/:id", getPost); // 선택해 가져오기
+router.patch("/update/:id", updatePost);
+router.delete("/delete/:id", deletePost);
+
+router.post("/likes/:postId", likePost);
 
 module.exports = router;

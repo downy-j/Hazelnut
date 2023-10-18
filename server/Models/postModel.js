@@ -13,13 +13,17 @@ const PostModel = new Schema(
     },
     img: {
       type: String,
-      required: false,
     },
     writer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    hashtags: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

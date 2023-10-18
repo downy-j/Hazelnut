@@ -46,21 +46,15 @@ Nosql인 mongoDB를 사용
 
 ## Post
 
-- createPost : 새 포스트 생성()
-- getPosts : 전체 포스트 가져오기 ()
-- getPost : 특정 포스트 가져오기 ()
-- updatePost : 특정 포스트 수정 ()
-- deletePost : 특성 포스트 삭제 ()
-
-## Hashtag
-
-- createTag : 새태그 만들기
-- getTags : 모든 태그 가져오기. 특정 범위의 태그 가져오기
+- createPost : 새 포스트 생성(✔️)\_10.18
+- getPosts : 전체 포스트 가져오기 (✔️)\_10.17
+- getPost : 특정 포스트 가져오기 (✔️)\_10.17
+- updatePost : 특정 포스트 수정 (✔️)\_10.17
+- deletePost : 특성 포스트 삭제 (✔️)\_10.17
 
 ## LikeDisLike
 
-- likePost : 좋아요
-- dislikePost : 싫어요
+- likePost : 좋아요()\_10.18
 
 ## Comment
 
