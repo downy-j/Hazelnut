@@ -1,4 +1,4 @@
-const likeModel = require("../Models/likeDislikeModel");
+const likeModel = require("../Models/likeModel");
 
 /**
  * likePost
@@ -41,6 +41,7 @@ const likePost = async (req, res) => {
         res.status(200).json({ message: "좋아요" });
       }
     }
+    newLike.save();
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

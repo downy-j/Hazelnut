@@ -14,6 +14,7 @@ const likeModel = new Schema(
     type: {
       type: String,
       enum: ["like", null],
+      default: null,
       require: false,
     },
     likeCount: {

@@ -46,26 +46,23 @@ Nosql인 mongoDB를 사용
 
 ## Post
 
-- createPost : 새 포스트 생성(✔️)\_10.18
+- createPost : 새 포스트 생성(✔️..)\_10.18
 - getPosts : 전체 포스트 가져오기 (✔️)\_10.17
 - getPost : 특정 포스트 가져오기 (✔️)\_10.17
 - updatePost : 특정 포스트 수정 (✔️)\_10.17
 - deletePost : 특성 포스트 삭제 (✔️)\_10.17
-
-## LikeDisLike
-
-- likePost : 좋아요()\_10.18
+- likePost : 좋아요(✔️..)\_10.18
 
 ## Comment
 
-- addComment : 댓글 달기
-- getComments : 특정 포스트의 댓글 가져오기
-- deleteComment : 댓글 삭제
+- addComment : 댓글 달기 (✔️..)\_10.19
+- getComments : 특정 포스트의 댓글 가져오기 (✔️)\_10.19
+- deleteComment : 댓글 삭제 (✔️)\_10.19
 
 ## Category
 
-- createCategory : 새 카테고리 만들기
-- getCategories : 전 카테고리 가져오기. 특정 카테고리만 가져오기
+- createCategory : 새 카테고리 만들기 (✔️..) \_10.19
+- getCategories : 전 카테고리 가져오기. 특정 카테고리만 가져오기 (✔️)\_10.19
 
 ## Search
 

@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/find/:userId", findUser);
 router.get("/", getUsers);
-router.patch("/:userId/update", updateUser);
+router.post("/update/:userId", updateUser);
 router.post("/follow/:id", follow);
 router.delete("/unfollow/:id", unfollow);
 

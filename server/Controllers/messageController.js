@@ -139,4 +139,15 @@ const unarchiveMessage = (req, res) => {
   }
 };
 
-module.exports = {};
+module.exports = {
+  createMessage,
+  getMessages,
+  updateMessage,
+  deleteMessage,
+  getMessageDetails,
+  markMessageAsRead,
+  getUnreadMessages,
+  getMessageActivity,
+  archiveMessage,
+  unarchiveMessage,
+};

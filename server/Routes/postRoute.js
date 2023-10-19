@@ -12,7 +12,13 @@ const {
   deletePost,
 } = require("../Controllers/postController");
 
-const { likePost } = require("../Controllers/likeDislikeController");
+const { likePost } = require("../Controllers/likeController");
+
+const {
+  addComment,
+  getComments,
+  deleteComment,
+} = require("../Controllers/commentController");
 
 const router = express.Router();
 
@@ -43,9 +49,15 @@ router.post("/create", upload2.none(), createPost);
 
 router.get("/get", getPosts); // 전부 가져오기
 router.get("/get/:id", getPost); // 선택해 가져오기
-router.patch("/update/:id", updatePost);
+router.post("/update/:id", updatePost);
 router.delete("/delete/:id", deletePost);
 
-router.post("/likes/:postId", likePost);
+// likeController
+router.post("/likes/:postId", likePost); //like
+
+// commentController
+router.post("/comment/:postId", addComment);
+router.get("/gets/comment/:postId", getComments);
+router.delete("/delete/comment/:postId", deleteComment);
 
 module.exports = router;
