@@ -2,8 +2,22 @@
 
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import { useEffect, useState } from "react";
+
+// showHide
 
 const Login = () => {
+  const pwToggle = () => {
+    let password = document.getElementById("password");
+    let togglePassword = document.getElementById("toggle");
+    if (password.type === "password") {
+      password.setAttribute("type", "text");
+      togglePassword.classList.add("hide");
+    } else {
+      password.setAttribute("type", "password");
+      togglePassword.classList.remove("hide");
+    }
+  };
   return (
     <>
       <div
@@ -25,11 +39,21 @@ const Login = () => {
 
               <form className="loginForm P-10 mb-10">
                 <div className="emailBox P-5">
-                  <input type="text" placeholder="이메일" />
+                  <input type="text" required id="email" />
+                  <span>Email</span>
                 </div>
-                <div className="pwBox P-5">
-                  <input type="password" placeholder="비밀번호" />
+
+                <div className="pwBox P-5 mb-10">
+                  <input type="password" required id="password" />
+                  <span>password</span>
+                  <div
+                    id="toggle"
+                    onClick={() => {
+                      pwToggle();
+                    }}
+                  ></div>
                 </div>
+
                 <button className="mt_5">로그인</button>
               </form>
 

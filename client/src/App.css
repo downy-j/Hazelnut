@@ -63,6 +63,11 @@ dd {
 }
 /* 레이아웃 */
 
+:root {
+  --clr: #0ab3ff;
+}
+/* 루트 */
+
 .loginContainer {
   height: 90vh;
 }
@@ -85,11 +90,65 @@ dd {
 
 /* 로그인 폼 */
 .loginForm {
+  /* background: #1d2b3a; */
 }
-.emailBox {
-}
+.emailBox,
 .pwBox {
+  position: relative;
+  width: 300px;
 }
+.emailBox input,
+.pwBox input {
+  padding: 8px 8px;
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  border-radius: 5px;
+  color: #1d2b3a;
+  border: 1px solid #1d2b3a;
+  font-size: 1em;
+}
+.emailBox span,
+.pwBox span {
+  position: absolute;
+  left: 0;
+  padding: 15px 20px;
+  pointer-events: none;
+  font-size: 1em;
+  transition: 0.5s;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.1em;
+  content: "ID";
+}
+.emailBox input:focus ~ span,
+.emailBox input:valid ~ span,
+.pwBox input:focus ~ span,
+.pwBox input:valid ~ span {
+  color: #1d2b3a;
+  font-size: 0.75em;
+  transform: translateX(20px) translateY(-7px);
+  padding: 0 5px;
+  background: #00dfc4;
+  border-radius: 2px;
+}
+#toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+  background: url(../public/img/home/eyes_open.png);
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+#toggle.hide {
+  background: url(../public/img/home/eyes_close.png);
+  background-size: cover;
+}
+
 .loginForm button {
 }
 
@@ -102,11 +161,11 @@ dd {
 }
 
 .findPwBox .findPw {
-  transition: 0.3s ease;
+  transition: 0.5s;
 }
 .findPwBox .findPw:hover {
   color: blue;
-  transform: scale(1.2);
+  letter-spacing: 0.1em;
 }
 
 /* 계정 생성 박스 */
@@ -115,11 +174,11 @@ dd {
 }
 
 .produceBox p a {
-  transition: 0.3s ease;
+  transition: 0.5s;
 }
 .produceBox p a:hover {
   color: blue;
-  transform: scale(1.2);
+  letter-spacing: 0.1em;
 }
 
 /* 앱 다운 박스 */
@@ -127,6 +186,104 @@ dd {
 }
 .appDownloads img {
   margin: 5px 5px;
+}
+
+/* Regiest */
+.regiestContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #2f363e;
+}
+.regiBox {
+  position: relative;
+  width: 400px;
+  height: 560px;
+  border-radius: 30px;
+  background: #2f363e;
+  padding: 30px 50px;
+  box-shadow: 25px 25px 75px rgba(0, 0, 0, 0.25),
+    10px 10px 70px rgba(0, 0, 0, 0.25), inset 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 5px 5px 20px rgba(255, 255, 255, 0.2),
+    inset -5px -5px 15px rgba(0, 0, 0, 0.75);
+}
+.regiBox h2 {
+  width: 100%;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+  font-size: 1.75em;
+  margin-bottom: 10px;
+}
+.regiInputBox {
+  position: relative;
+  width: 300px;
+  margin-bottom: 40px;
+}
+.regiInputBox input {
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #999;
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 0.15em;
+}
+.regiInputBox label {
+  position: absolute;
+  left: 0;
+  padding: 10px 0;
+  color: #999;
+  text-transform: uppercase;
+}
+.regiInputBox label span {
+  position: relative;
+  display: inline-flex;
+  letter-spacing: 0.05em;
+  transition: 0.2s ease-in-out;
+}
+.regiInputBox input:focus ~ label span,
+.regiInputBox input:valid ~ label span {
+  color: var(--clr);
+  letter-spacing: 0.15em;
+  transform: translateY(-25px);
+}
+.regiInputBox input:focus,
+.regiInputBox input:valid {
+  border-bottom: 2px solid var(--clr);
+}
+.regiInputBox input[type="submit"] {
+  background: var(--clr);
+  border: none;
+  padding: 15px;
+  border-radius: 50px;
+  color: #1c2630;
+  font-weight: 600;
+  font-size: 1.15em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.regiInputBox input[type="submit"]:hover {
+  letter-spacing: 0.35em;
+}
+.regiBox form p {
+  color: #fff;
+}
+.regiBox form p a {
+  color: var(--clr);
+  font-weight: 500;
+  text-decoration: none;
+}
+.regiInputBox button {
+  position: absolute;
+  right: 0;
+  padding: 5px 0;
 }
 
 /* footer */

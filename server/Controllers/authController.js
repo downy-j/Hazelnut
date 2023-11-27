@@ -2,6 +2,7 @@ const userModel = require("../Models/userModel");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 /**
  * createToken
@@ -71,30 +72,52 @@ const registerUser = async (req, res) => {
  *
  */
 const loginUser = async (req, res) => {
-  try {
-    // 내가 입력한거...
-    const { email, password } = req.body;
-    // userModel에 email에서 찾아 담아봐
-    let user = await userModel.findOne({ email });
+  passport.authenticate("local", (authError, user, info) => {
+    if (authError) {
+      console.error(authError);
+      return next(authError);
+    }
 
-    // 근데 없음?
     if (!user) {
-      return res.status(400).json("존재하지 않는 사용자 입니다.");
+      return res.redirect(`/?error=${info.message}`);
     }
-    // 비번 복호화 해서 isValidPassword에 담아봐
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      return res.status(400).json("잘못된 이메일 또는 비밀번호.");
-    }
-
-    const token = createToken(user._id);
-
-    res.status(200).json({ _id: user._id, nick: user.nick, email, token }); // 그러면 들어가
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
-  }
+    return req.login(user, (loginError) => {
+      if (loginError) {
+        console.error(loginError);
+        return next(loginError);
+      }
+      const token = createToken(user._id);
+      return res
+        .status(200)
+        .json({ _id: user._id, nick: user.nick, email, token });
+    });
+  })(req, res, next);
 };
+
+//   try {
+//     // 내가 입력한거...
+//     const { email, password } = req.body;
+//     // userModel에 email에서 찾아 담아봐
+//     let user = await userModel.findOne({ email });
+
+//     // 근데 없음?
+//     if (!user) {
+//       return res.status(400).json("존재하지 않는 사용자 입니다.");
+//     }
+//     // 비번 복호화 해서 isValidPassword에 담아봐
+//     const isValidPassword = await bcrypt.compare(password, user.password);
+//     if (!isValidPassword) {
+//       return res.status(400).json("잘못된 이메일 또는 비밀번호.");
+//     }
+
+//     const token = createToken(user._id);
+
+//     res.status(200).json({ _id: user._id, nick: user.nick, email, token }); // 그러면 들어가
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json(error);
+//   }
+// };
 
 /**
  * logoutUser
@@ -105,12 +128,15 @@ const loginUser = async (req, res) => {
  */
 const logoutUser = (req, res) => {
   try {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json("로그아웃 도중 예기치 않은 오류 발생.");
-      }
-      res.status(200).json("로그아웃 되셨습니다");
-    });
+    req.logout();
+    req.session.destroy(); // 로그인인증 수단으로 사용한 세션쿠키를 삭제와 파괴
+    res.status(200).json("로그아웃 되셨습니다");
+    // req.session.destroy((err) => {
+    //   if (err) {
+    //     return res.status(500).json("로그아웃 도중 예기치 않은 오류 발생.");
+    //   }
+    //   res.status(200).json("로그아웃 되셨습니다");
+    // });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
