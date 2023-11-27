@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable*/
+
+import "./App.css";
+
+import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
+
+// 컴포넌트
+
+// 페이지
+import Login from "./pages/Login";
+import Main from "./pages/Main";
+import Regiest from "./pages/Register";
 
 function App() {
+  let [user, setUser] = useState(true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={!user ? <Login /> : <Main />}></Route>
+        <Route path="/registPage" element={<Regiest />}></Route>
+      </Routes>
+    </>
   );
 }
 
