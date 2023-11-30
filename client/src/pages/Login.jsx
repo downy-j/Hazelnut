@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 
-// showHide
-
-const Login = () => {
+const Login = (props) => {
   const pwToggle = () => {
     let password = document.getElementById("password");
     let togglePassword = document.getElementById("toggle");
@@ -18,6 +16,7 @@ const Login = () => {
       togglePassword.classList.remove("hide");
     }
   };
+
   return (
     <>
       <div
@@ -53,20 +52,34 @@ const Login = () => {
                     }}
                   ></div>
                 </div>
-
-                <button className="mt_5">로그인</button>
+                <Link
+                  onClick={() => {
+                    props.setUser(true);
+                  }}
+                  to="/"
+                  className="loginBtn mt_5 df-jcc-aic"
+                >
+                  <span>로그인</span>
+                  <div className="wave"></div>
+                </Link>
               </form>
 
               <div className="socialBox mb-10">
                 <div className="socials df-jcc-aic Pt-10">
                   <Link className="socialLink naver P-5" to="#">
-                    <img src="https://placehold.co/50x50" />
+                    <img
+                      src={process.env.PUBLIC_URL + "./img/home/naverBtn.png"}
+                    />
                   </Link>
                   <Link className="socialLink kakao P-5" to="#">
-                    <img src="https://placehold.co/50x50" />
+                    <img
+                      src={process.env.PUBLIC_URL + "./img/home/kakaoBtn.png"}
+                    />
                   </Link>
                   <Link className="socialLink google P-5" to="#">
-                    <img src="https://placehold.co/50x50" />
+                    <img
+                      src={process.env.PUBLIC_URL + "./img/home/btn_google.svg"}
+                    />
                   </Link>
                 </div>
                 <span className="findPwBox">

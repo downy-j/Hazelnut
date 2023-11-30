@@ -18,7 +18,10 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={!user ? <Login /> : <Main />}></Route>
+        <Route
+          path="/"
+          element={!user ? <Login user={user} setUser={setUser} /> : <Main />}
+        ></Route>
         <Route path="/registPage" element={<Regiest />}></Route>
       </Routes>
     </>

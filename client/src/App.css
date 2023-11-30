@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Poppins:wght@300;400;500;600;700&display=swap");
+
 body {
   line-height: 1.5;
   font-family: "Poppins", sans-serif;
@@ -12,6 +13,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.df-jcb-ajc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
 }
 .df-jcc {
   display: flex;
@@ -34,11 +41,20 @@ body {
 .mb-10 {
   margin-bottom: 10px;
 }
+.mb-5 {
+  margin-bottom: 5px;
+}
 .ml-5 {
   margin-left: 5px;
 }
 .mt_5 {
   margin-top: 5px;
+}
+.mt_10 {
+  margin-top: 10px;
+}
+.mt_20 {
+  margin-top: 20px;
 }
 .Pt-10 {
   padding-top: 10px;
@@ -68,6 +84,7 @@ dd {
 }
 /* 루트 */
 
+/* 로그인 - '/' 시작 */
 .loginContainer {
   height: 90vh;
 }
@@ -76,22 +93,11 @@ dd {
   border: 2px solid black;
   border-radius: 20px;
 }
-.loginLeftBox {
-}
 
-/* 오른쪽 상단 로고 */
-.loginRightBox {
-}
 .brandLoginSocial_crad {
   border: 1px solid gray;
 }
-.brandName {
-}
 
-/* 로그인 폼 */
-.loginForm {
-  /* background: #1d2b3a; */
-}
 .emailBox,
 .pwBox {
   position: relative;
@@ -149,15 +155,60 @@ dd {
   background-size: cover;
 }
 
-.loginForm button {
+.loginForm .loginBtn {
+  position: relative;
+  display: block;
+  padding: 10px 30px;
+  border: 2px solid #00aeff;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: #00aeff;
+  overflow: hidden;
+}
+.loginBtn span {
+  position: relative;
+  z-index: 1;
+  transition: 1s;
+}
+.loginBtn:hover span {
+  color: #fff;
+  letter-spacing: 0.45em;
+}
+.loginBtn .wave {
+  position: absolute;
+  top: calc(100% + 22px);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #00aeff;
+  transition: 1s;
+}
+.loginBtn:hover .wave {
+  top: 0;
+}
+.loginBtn .wave::before {
+  content: "";
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  background: url("../public/img/home/wave.png");
+  animation: animate 0.5s linear infinite;
+}
+@keyframes animate {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 118px;
+  }
 }
 
-/* 소셜 로그인 선택 및 비번 찾기 */
-.socialBox {
-}
-.socials {
-}
-.socialLink {
+.socialLink img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
 }
 
 .findPwBox .findPw {
@@ -168,7 +219,6 @@ dd {
   letter-spacing: 0.1em;
 }
 
-/* 계정 생성 박스 */
 .produceBox {
   border: 1px solid gray;
 }
@@ -181,14 +231,92 @@ dd {
   letter-spacing: 0.1em;
 }
 
-/* 앱 다운 박스 */
-.appDownloads {
-}
 .appDownloads img {
   margin: 5px 5px;
 }
 
-/* Regiest */
+/* footer */
+.footerContainer {
+  max-width: 1170px;
+  margin: auto;
+}
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.footer {
+  background: #24262b;
+  padding: 15px 0;
+}
+.footer-col {
+  width: 25%;
+  padding: 0 15px;
+}
+.footer-col h4 {
+  font-size: 18px;
+  color: #ffffff;
+  text-transform: capitalize;
+  margin-bottom: 25px;
+  font-weight: 500;
+  position: relative;
+}
+.footer-col h4::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  background: #e91e63;
+  height: 2px;
+  box-sizing: border-box;
+  width: 50px;
+}
+.footer-col ul li:not(:last-child) {
+  margin-bottom: 5px;
+}
+.footer-col ul li a {
+  font-size: 16px;
+  text-transform: capitalize;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 300;
+  color: #bbbbbb;
+  display: block;
+  transition: all 0.3s ease;
+}
+.footer-col ul li a:hover {
+  color: #ffffff;
+  padding-left: 8px;
+}
+.footer-col .social-links a {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 10px 10px 0;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  transition: all 0.5s ease;
+}
+.footer-col .social-links a:hover {
+  color: #24242b;
+  background: #ffffff;
+}
+/* 화면 크기 조율 부분 */
+@media (max-width: 767px) {
+  .footer-col {
+    width: 50%;
+    margin-bottom: 30px;
+  }
+}
+@media (max-width: 574px) {
+  .footer-col {
+    width: 100%;
+  }
+}
+
+/* 회원가입 = '/regisetPage' */
 .regiestContainer {
   display: flex;
   justify-content: center;
@@ -286,83 +414,151 @@ dd {
   padding: 5px 0;
 }
 
-/* footer */
-.footerContainer {
-  max-width: 1170px;
-  margin: auto;
+/* 로그인 성공시 갈수있는 Main Page - '/' */
+.MainContainer {
+  background: #313338;
+  width: 100%;
+  height: 100vh;
 }
-.footer-row {
-  display: flex;
-  flex-wrap: wrap;
+
+.MainContainer .MainBox {
+  width: 85%;
+  height: 90vh;
+  border-radius: 20px;
 }
-.footer {
-  background: #24262b;
-  padding: 15px 0;
-}
-.footer-col {
+
+.MainBox .MainLBox {
   width: 25%;
-  padding: 0 15px;
-}
-.footer-col h4 {
-  font-size: 18px;
-  color: #ffffff;
-  text-transform: capitalize;
-  margin-bottom: 25px;
-  font-weight: 500;
+  height: 90vh;
+  border: 2px solid black;
   position: relative;
+  border-radius: 20px;
+  border-right: none;
+  background: #29442f;
 }
-.footer-col h4::before {
-  content: "";
+.MainBox .MainRBox {
+  width: 75%;
+  height: 90vh;
+  border: 2px solid black;
+  position: relative;
+  border-radius: 20px;
+  border-left: none;
+  background: #29442f;
+}
+.MainLBox .diaryLBox {
+  width: 90%;
+  height: 80vh;
+  border: 2px solid black;
   position: absolute;
+  border-radius: 20px;
+  border-right: none;
+  right: 0;
+  background: #c7b199;
+
+  padding: 15px;
+}
+.MainRBox .diaryRBox {
+  width: 95%;
+  height: 80vh;
+  border: 2px solid black;
+  position: absolute;
+  border-radius: 20px;
+  border-left: none;
   left: 0;
-  bottom: -10px;
-  background: #e91e63;
-  height: 2px;
-  box-sizing: border-box;
-  width: 50px;
+  background: #c7b199;
 }
-.footer-col ul li:not(:last-child) {
-  margin-bottom: 5px;
+/* 메인 레이아웃 잡은거. . */
+
+.diaryLBox .diaryLTBox p {
+  margin: 10px;
 }
-.footer-col ul li a {
-  font-size: 16px;
-  text-transform: capitalize;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 300;
-  color: #bbbbbb;
-  display: block;
-  transition: all 0.3s ease;
+
+.diaryLBox .diaryLMBox {
+  background: #dfd3c3;
+  padding: 20px;
 }
-.footer-col ul li a:hover {
-  color: #ffffff;
-  padding-left: 8px;
+
+.diaryLMBox {
+  border: 1px solid black;
+  border-radius: 10px;
 }
-.footer-col .social-links a {
-  display: inline-block;
+
+.diaryLMBox .diaryIntroduction {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.diarySettingBox {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.btn {
+  border: 1px solid black;
+  margin: 5px;
+}
+/* 메인 L 박스 레이아웃 */
+
+/* 사이드바 */
+.menu-btn {
+  position: absolute;
+  left: 92px;
+  top: 3.5%;
+  width: 23px;
   height: 40px;
-  width: 40px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 0 10px 10px 0;
-  text-align: center;
-  line-height: 40px;
-  border-radius: 50%;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  cursor: pointer;
+  color: #757575;
+  border: 2px solid #gray;
+  background-color: #1e1f22;
+  z-index: 2;
+}
+.menu-btn:hover {
+  color: #fff;
+}
+.menu-btn i {
+  transition: all 0.3s;
+}
+
+.sideBar {
+  position: absolute;
+  width: 92px;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #1e1f22;
+  padding: 24px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  transition: all 0.3s;
+  z-index: 1;
+}
+.sideBar .messaging,
+.sideBar .searching {
+  width: 55px;
+  height: 55px;
+  border: 2px solid #fff;
+  border-radius: 20px;
+}
+
+.sideBar .messaging i,
+.sideBar .searching i {
+  color: #fff;
+  font-size: 1.5em;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.sideBar .messaging i:hover,
+.sideBar .searching i:hover {
   color: #ffffff;
-  transition: all 0.5s ease;
-}
-.footer-col .social-links a:hover {
-  color: #24242b;
-  background: #ffffff;
-}
-/* responsive */
-@media (max-width: 767px) {
-  .footer-col {
-    width: 50%;
-    margin-bottom: 30px;
-  }
-}
-@media (max-width: 574px) {
-  .footer-col {
-    width: 100%;
-  }
+  font-size: 2em;
+  transition: 0.5s;
 }
