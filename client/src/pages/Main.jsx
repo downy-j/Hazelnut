@@ -3,16 +3,37 @@
 import { useEffect, useState } from "react";
 import Alram from "../components/Modal/Alram";
 import SideBar from "../components/Tabs/sideBar";
+import Home from "../components/Tabs/Home";
+import Search from "../components/Tabs/Search";
+import Nuts from "../components/Tabs/Nuts";
+import Make from "../components/Tabs/Make";
+import Profile from "../components/Tabs/Profile";
+import Welcome from "../components/Modal/Welcome";
 
 const Main = () => {
-  const [modal, setModal] = useState(true);
-  const [today, setToday] = useState(100);
-  const [total, setTotal] = useState(1000);
-  const [sideBtn, setSideBtn] = useState(true);
+  const [isAlramModal, setAlramModal] = useState(true);
+  const [isWelcomeModal, setWelcomeModal] = useState(true);
+  const [isSideBtn, setSideBtn] = useState(false);
+
+  const [isToday, setToday] = useState(100);
+  const [isTotal, setTotal] = useState(1000);
+
+  const [isWelcome, setWelcome] = useState("대화명을 입력하세요");
+  const [isUpdate, setUpdate] = useState("");
+
+  const [isTabs, setTabs] = useState([
+    "홈",
+    "탐색",
+    "너츠",
+    "만들기",
+    "프로필",
+  ]);
+
+  const [activeTab, setActiveTab] = useState(0);
 
   const btnClick = () => {
-    setSideBtn(!sideBtn);
-    if (!sideBtn) {
+    setSideBtn(!isSideBtn);
+    if (!isSideBtn) {
       document.querySelector(".menu-btn").style.left = "92px";
       document.querySelector(".menu-btn i").style.transform = "rotate(180deg)";
     } else {
@@ -23,6 +44,15 @@ const Main = () => {
 
   return (
     <>
+      {!isWelcomeModal ? (
+        <Welcome
+          setUpdate={setUpdate}
+          setWelcome={setWelcome}
+          isUpdate={isUpdate}
+          setWelcomeModal={setWelcomeModal}
+          isAlramModal={isAlramModal}
+        />
+      ) : null}
       <div className="MainContainer df-jcc-aic">
         <div className="sideBox">
           <div
@@ -33,17 +63,17 @@ const Main = () => {
           >
             <i class="fa-solid fa-chevron-right"></i>
           </div>
-          {sideBtn ? <SideBar /> : null}
+          {isSideBtn ? <SideBar /> : null}
         </div>
         <div className="MainBox df-jcc-aic">
           <div className="MainLBox df-jcc-aic">
             <div className="diaryLBox">
               <div className="diaryLTBox df-jcc-aic mb-10">
                 <p>
-                  today <span> : {today}</span>
+                  today <span> : {isToday}</span>
                 </p>
                 <p>
-                  total <span> : {total}</span>
+                  total <span> : {isTotal}</span>
                 </p>
               </div>
 
@@ -70,7 +100,7 @@ const Main = () => {
               <div className="diarySettingBox df-jcc-aic mb-10">
                 <span className="SettingBtn1 btn">1</span>
                 <span className="SettingBtn2 btn">2</span>
-                <span className="SettingBtn3  btn">3</span>
+                <span className="SettingBtn3 btn">3</span>
                 <span className="SettingBtn4 btn">4</span>
               </div>
             </div>
@@ -78,7 +108,50 @@ const Main = () => {
 
           <div className="MainRBox df-jcc-aic">
             <div className="diaryRBox">
-              <div></div>
+              <div className="diaryRTBox ">
+                <p
+                  onClick={() => {
+                    setWelcomeModal(!isWelcomeModal);
+                  }}
+                >
+                  {isWelcome}
+                </p>
+
+                <div className="friend ">
+                  <p
+                    className="addFriend"
+                    onClick={() => {
+                      alert("친구신청을합니다");
+                    }}
+                  >
+                    <span>➕</span> 친구맺기
+                  </p>
+
+                  <p className="alram">
+                    <i class="fa-regular fa-bell"></i>
+                  </p>
+                </div>
+              </div>
+
+              <div className="rightMenuTab">
+                {isTabs.map((isTab, index) => (
+                  <div
+                    key={index}
+                    className="tab df-jcc-aic"
+                    onClick={() => setActiveTab(index)}
+                  >
+                    <span>{isTab}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="diaryCanvas">
+                {isTabs[activeTab] === "홈" && <Home />}
+                {isTabs[activeTab] === "탐색" && <Search />}
+                {isTabs[activeTab] === "너츠" && <Nuts />}
+                {isTabs[activeTab] === "만들기" && <Make />}
+                {isTabs[activeTab] === "프로필" && <Profile />}
+              </div>
             </div>
           </div>
         </div>
