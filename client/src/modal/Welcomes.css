@@ -1,0 +1,89 @@
+/* 모달 */
+/* Welcome Modal */
+.welcomeContainer {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  background: #223243;
+  border-radius: 20px;
+  z-index: 999;
+
+  transition: top 0.5s ease-in-out;
+}
+.welcomeBox {
+  padding: 40px;
+  border-radius: 20px;
+  border: 8px solid #223243;
+  box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.35),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    inset 5px 5px 15px rgba(0, 0, 0, 0.35);
+}
+.welcomeBox .close {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  color: #00dfc4;
+  right: 3%;
+  top: 10%;
+  cursor: pointer;
+}
+.welcomeBox .welcomeForm {
+  display: flex;
+}
+.welcomeBox .welcomeForm input {
+  padding: 6px 5px 6px 24px;
+  border: none;
+  width: 500px;
+  background: #223243;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #fff;
+  font-weight: 300;
+  border-radius: 25px;
+  font-size: 1em;
+  box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.35);
+  transition: 0.5s;
+  outline: none;
+
+  padding-bottom: 10px;
+}
+.welcomeBox .welcomeForm span {
+  position: absolute;
+  left: 45px;
+  padding: 10px 5px 6px 24px;
+  pointer-events: none;
+  font-size: 1em;
+  font-weight: 300;
+  transition: 0.5s;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.5);
+}
+.welcomeBox .welcomeForm input:valid ~ span,
+.welcomeBox .welcomeForm input:focus ~ span {
+  color: #00dfc4;
+  border: 1px solid #00dfc4;
+  background: #223243;
+  transform: translateX(25px) translateY(-7px);
+  font-size: 0.6em;
+  padding: 0 8px;
+  border-radius: 10px;
+  letter-spacing: 0.1em;
+}
+.welcomeBox .welcomeForm input:valid,
+.welcomeBox .welcomeForm input:focus {
+  border: 1px solid #00dfc4;
+}
+.welcomeBox .welcomeForm input[type="submit"] {
+  background: #00dfc4;
+  color: #223243;
+  padding: 10px 0;
+  margin-left: 10px;
+  font-weight: 500;
+  width: 20%;
+  cursor: pointer;
+  box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.35),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    inset 5px 5px 15px rgba(0, 0, 0, 0.35);
+}

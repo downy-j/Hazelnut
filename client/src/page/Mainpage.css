@@ -1,0 +1,73 @@
+.mainBox {
+  border: 2px solid black;
+  background: #000;
+
+  width: 100%;
+  height: 100vh;
+  color: #fff;
+}
+
+/* mainBox__left */
+.mainBox__left {
+  flex: 0.2;
+  width: 100%;
+  height: 100vh;
+}
+
+/* mainBox__right */
+.mainBox__right {
+  flex: 0.8;
+  width: 100%;
+  height: 100vh;
+}
+/* right modal */
+.mainBox__right .tabBox {
+  position: absolute;
+  right: 2%;
+  top: 15%;
+  background-color: #000;
+}
+.mainBox__right .tabBox .tab___button {
+  font-size: 20px;
+  padding: 10px 0;
+  border: 1px solid white;
+  border-left: none;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+/* right top box */
+.mainBox__right .rightBox .rightTopBox {
+  margin-bottom: 10px;
+  padding: 0 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 6%;
+}
+.mainBox__right .rightBox .rightTopBox .wellcomText span {
+  font-size: 1.9em;
+  cursor: pointer;
+}
+.mainBox__right .rightBox .rightTopBox .addFrind {
+  cursor: pointer;
+}
+.mainBox__right .rightBox .rightTopBox .addFrind span {
+  font-size: 1.3em;
+}
+
+.mainBox__right .rightBox {
+  width: 95%;
+  height: 90vh;
+  border: 1px solid white;
+
+  padding: 15px;
+}
+.mainBox__right .rightBox .containers {
+  padding: 10px;
+  width: 100%;
+  height: 90%;
+}

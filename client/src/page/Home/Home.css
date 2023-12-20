@@ -1,0 +1,145 @@
+/* home */
+.mainBox__right .rightBox .homeContainer {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 15px;
+
+  width: 100%;
+  height: 100%;
+  border: 1px solid white;
+}
+.mainBox__right .rightBox .homeContainer .recentPostBox,
+.mainBox__right .rightBox .homeContainer .newLogBox,
+.mainBox__right .rightBox .homeContainer .favoriteBox,
+.mainBox__right .rightBox .homeContainer .noteBox {
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+}
+.mainBox__right .rightBox .homeContainer .recentPostBox .main__text,
+.mainBox__right .rightBox .homeContainer .newLogBox .main__text,
+.mainBox__right .rightBox .homeContainer .favoriteBox .main__text,
+.mainBox__right .rightBox .homeContainer .noteBox .main__text {
+  border-bottom: 1px solid white;
+}
+.mainBox__right .rightBox .homeContainer .recentPostBox .main__text h3,
+.mainBox__right .rightBox .homeContainer .newLogBox .main__text h3,
+.mainBox__right .rightBox .homeContainer .favoriteBox .main__text h3,
+.mainBox__right .rightBox .homeContainer .noteBox .main__text h3 {
+  padding-left: 15px;
+  font-weight: 300;
+}
+
+/* 최근 게시글 */
+.mainBox__right .rightBox .homeContainer .recentPostBox ul {
+  padding: 10px;
+}
+.mainBox__right .rightBox .homeContainer .recentPostBox ul li a {
+  display: flex;
+  justify-content: space-between;
+}
+.mainBox__right .rightBox .homeContainer .recentPostBox ul li span {
+  margin: 5px;
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .recentPostBox
+  ul
+  li
+  span:nth-child(1) {
+  border-radius: 10%;
+  background-color: skyblue;
+  padding: 3px;
+  color: blueviolet;
+  font-weight: 600;
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .recentPostBox
+  ul
+  li
+  span:nth-child(2) {
+  width: 180px;
+}
+
+/* 새소식, 쪽지*/
+.mainBox__right .rightBox .homeContainer .noteBox ul,
+.mainBox__right .rightBox .homeContainer .newLogBox ul {
+  padding: 10px;
+}
+.mainBox__right .rightBox .homeContainer .noteBox ul li,
+.mainBox__right .rightBox .homeContainer .newLogBox ul li {
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
+}
+.mainBox__right .rightBox .homeContainer .noteBox ul li img,
+.mainBox__right .rightBox .homeContainer .newLogBox ul li img {
+  width: 8%;
+  height: 8%;
+}
+.mainBox__right .rightBox .homeContainer .noteBox ul li a,
+.mainBox__right .rightBox .homeContainer .newLogBox ul li a {
+  padding-left: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.mainBox__right .rightBox .homeContainer .noteBox ul li span,
+.mainBox__right .rightBox .homeContainer .newLogBox ul li span {
+  margin: 5px;
+}
+.mainBox__right .rightBox .homeContainer .newLogBox,
+.mainBox__right .rightBox .homeContainer .noteBox {
+  min-height: 100%;
+  min-width: 100%;
+}
+/* 쪽지 */
+.mainBox__right .rightBox .homeContainer .noteBox .noteSend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+}
+.mainBox__right .rightBox .homeContainer .noteBox .noteSend textarea {
+  width: 80%;
+  height: 14em;
+  border: none;
+  resize: none;
+  margin-bottom: 8px;
+}
+.mainBox__right .rightBox .homeContainer .noteBox .noteSend input {
+  background: 0;
+  border: 0;
+  color: white;
+  border-radius: 15px;
+}
+.mainBox__right .rightBox .homeContainer .noteBox .noteSend input:hover {
+  background-color: rgba(255, 255, 255, 0.128);
+}
+
+/* 관심사 */
+.mainBox__right .rightBox .homeContainer .favoriteBox .favorites {
+  margin-bottom: 15px;
+}
+
+.mainBox__right .rightBox .homeContainer .favoriteBox .favorite {
+  border: 1px solid white;
+  border-radius: 10px;
+}
+.mainBox__right .rightBox .homeContainer .favoriteBox .favoriteList {
+  padding: 10px;
+}
+.mainBox__right .rightBox .homeContainer .favoriteBox .favoriteList span {
+  margin: 5px;
+  padding: 2px;
+  background-color: skyblue;
+  color: black;
+  font-weight: 600;
+}

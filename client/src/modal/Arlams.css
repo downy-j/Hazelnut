@@ -1,0 +1,86 @@
+.alram {
+  position: absolute;
+  width: 400px;
+  height: 100px;
+
+  left: 14%;
+  bottom: 20px;
+}
+.alram ul {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: 0.5s;
+}
+.alram ul:hover {
+  gap: 5px;
+}
+.alram ul li {
+  position: relative;
+  list-style: none;
+  width: 400px;
+  height: 100px;
+  padding: 15px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: 0.5s;
+  box-shadow: 0 -15px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  border: 1px solid wheat;
+}
+.alram ul li:hover {
+  border: 2px solid white;
+  transition: 0.5s ease-in-out;
+}
+.alram ul:hover li {
+  transform: translateZ(0px) translate(0, 0) rotate(0deg);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+}
+.alram ul li .alramBox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  transition: 0.5s;
+}
+.alram ul li:hover .alramBox {
+  transform: translateX(-20px);
+}
+.alram ul li .alramBox img {
+  max-width: 70px;
+  border-radius: 5px;
+}
+
+.alram ul li .alramContent {
+  width: 100%;
+  cursor: pointer;
+}
+.alram ul li .alramContent h5 {
+  font-weight: 600;
+  color: #aaa;
+  transition: 0.5s;
+}
+.alram ul li .alramContent p {
+  position: relative;
+  width: 100%;
+  line-height: 1em;
+  color: #aaa;
+  transition: 0.5s;
+}
+
+.alram ul li .alramContent p span {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  color: #aaa;
+  transform: 0.5s;
+  font-size: 0.75em;
+}
+.alram ul li:hover .alramContent h5,
+.alram ul li:hover .alramContent p,
+.alram ul li:hover .alramContent p span {
+  color: #fff;
+}

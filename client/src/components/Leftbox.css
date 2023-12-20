@@ -1,0 +1,39 @@
+.mainBox__left .leftBox {
+  width: 90%;
+  height: 90vh;
+  border: 1px solid white;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+.mainBox__left .leftBox .visit__count {
+  padding: 10px;
+
+  margin-bottom: 20px;
+}
+.mainBox__left .leftBox .visit__count span {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.mainBox__left .leftBox img {
+  border-radius: 10%;
+  margin-bottom: 20px;
+  max-width: 100%;
+  min-height: 40%;
+
+  border: 2px solid white;
+
+  cursor: pointer;
+}
+.conversation__Text {
+  border-radius: 10%;
+  max-width: 100%;
+  min-height: 40%;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  cursor: pointer;
+}
