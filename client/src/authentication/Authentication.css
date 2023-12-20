@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
+.auth__body {
+  min-height: 100vh;
+  background: #000;
+  flex-direction: column;
+}
+.auth__body .logo__Text {
+  margin-bottom: 20px;
+  font-size: 3em;
+  padding: 15px;
+  color: wheat;
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: 0.05em;
+}
+.auth__container {
+  padding: 40px;
+  border-radius: 20px;
+  border: 8px solid #fff;
+  box-shadow: -5px -5px 15px rgb(255, 255, 255, 0.7),
+    5px 5px 15px rgba(255, 255, 255, 0.35),
+    inset -5px -5px 15px rgb(255, 255, 255, 0.7),
+    inset 5px 5px 15px rgba(255, 255, 255, 0.35);
+}
