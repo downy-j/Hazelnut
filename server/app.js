@@ -2,16 +2,12 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const dotenv = require("dotenv");
-const passport = require("passport");
 const cors = require("cors");
+require("dotenv").config();
 
-dotenv.config();
 const { sequelize } = require("./src/models");
-const passportConfing = require("./src/passport");
 
 const app = express();
-passportConfing(); // 패스포트 설정
 const PORT = process.env.PORT || 5000;
 sequelize
   .sync({ force: false })
@@ -37,8 +33,6 @@ app.use(
     },
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 // 라우팅
 const main = require("./src/routes");
