@@ -3,17 +3,20 @@
 const bcrypt = require("bcrypt");
 const User = require("../../models/User");
 const validator = require("validator");
-// const jwt = require("jsonwebtoken");
-
-// const createToken = (id) => {
-//   const jwtkey = process.env.JWT_SECRET_KEY;
-
-//   return jwt.sign({ id }, jwtkey, { expiresIn: "3d" });
-// };
 
 const output = {
   main: (req, res) => {
-    res.json("컨트롤러 만들었고 output에 있음");
+    res.json("로그인 성공 메인화면 진입");
+  },
+  logout: (req, res) => {
+    res.json("로그아웃 성공");
+    res.redirect("/login");
+  },
+  login: (req, res) => {
+    res.json("로그인 화면입니다 로그인 하세요.");
+  },
+  register: (req, res) => {
+    res.json("회원가입 화면 입니다 가입하세요.");
   },
 };
 

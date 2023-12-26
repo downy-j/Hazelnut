@@ -34,6 +34,9 @@ function Sidebar() {
             <div className="menu__button">
               <i class="fa-regular fa-message"></i>
             </div>
+            <div className="menu__button">
+              <i class="fa-regular fa-message"></i>
+            </div>
           </div>
         </div>
       ) : null}
