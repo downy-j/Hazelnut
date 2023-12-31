@@ -1,12 +1,17 @@
-import React from "react";
+/* eslint-disable*/
+
+import React, { useContext } from "react";
 import "./Home.css";
 
 import RecentPost from "./RecentPost";
 import Newlog from "./Newlog";
 import Favorite from "./Favorite";
 import Note from "./Note";
+import { AuthContext } from "../../context/AuthContext";
 
-function Home({ isUser }) {
+function Home() {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="homeContainer">
       <div className="recentPostBox">
@@ -40,7 +45,7 @@ function Home({ isUser }) {
         <div className="main__text">
           <h3>쪽지</h3>
         </div>
-        {isUser ? (
+        {user ? (
           <div className="noteList">
             <ul>
               <Note />

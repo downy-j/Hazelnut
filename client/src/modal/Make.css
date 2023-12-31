@@ -1,0 +1,151 @@
+.makeBody {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  right: 0;
+
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.makeBody .makeBox {
+  width: 700px;
+  height: 800px;
+  border: 2px solid black;
+  background: #262626;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.makeBody .makeBox .makeTitle {
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.makeBody .makeBox .makeTitle h3 {
+  font-size: 1.25em;
+}
+.makeBody .makeBox .makeContent {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+
+  overflow: hidden;
+}
+.makeBody .makeBox .makeContent p,
+.makeBody .makeBox .makeContent img {
+  padding: 15px 0;
+}
+
+.makeBody .makeBox .makeContent .uploadBtn {
+  position: relative;
+
+  color: #0095f6;
+  transition: 0.3s ease-in;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  text-align: center;
+
+  overflow: hidden;
+}
+.makeBody .makeBox .makeContent .uploadBtn input[type="file"] {
+  position: absolute;
+  transform: scale(2);
+  opacity: 0;
+}
+.makeBody .makeBox .makeContent .uploadBtn:hover {
+  border: 1px solid white;
+  border-radius: 10px;
+  transition: 0.3s ease-in;
+  background: #0095f6;
+  color: white;
+}
+
+.makeBody .makeBox .closeBtn {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+/* imgBox */
+.makeContent .imgBox {
+  width: 100%;
+  height: 350px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-bottom: 1px solid wheat;
+
+  margin: 15px 0;
+}
+.makeContent .imgBox img {
+  width: 350px;
+  height: 350px;
+}
+.makeContent .textBox {
+  width: 100%;
+  height: 350px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.makeContent .textBox textarea {
+  width: 100%;
+  height: 100%;
+
+  margin: 15px;
+}
+.makeContent button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+  border: 0;
+  background: 0;
+  color: white;
+  margin: 5px 10px 5px 10px;
+  padding: 10px 15px 10px 15px;
+  border-radius: 15px;
+}
+.makeContent button:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.128);
+}
+.makeContent .textBox .textarea {
+  background-color: #dddddd;
+  color: #666666;
+  padding: 1em;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  outline: none;
+  font-weight: 500;
+  font-size: 16px;
+}

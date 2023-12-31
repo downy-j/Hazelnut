@@ -18,7 +18,6 @@ function Signup() {
         <input
           onChange={(e) => {
             updateRegisterInfo({ ...isRegisterInfo, nick: e.target.value });
-            console.log("이거 동작 하나요?");
           }}
           type="text"
           required
@@ -54,12 +53,10 @@ function Signup() {
         <span>Confirm Password</span>
       </div>
       <div className="inputBox">
-        <input onClick={isRegisterLoading} type="submit" value="계정생성" />
-        {isRegisterError?.error && (
-          <div>
-            <p>{isRegisterError?.message}</p>
-          </div>
-        )}
+        <button type="submit">
+          {isRegisterLoading ? "생성중. ." : "계정생성"}
+        </button>
+        {isRegisterError?.error && <p>{isRegisterError?.message}</p>}
       </div>
     </form>
   );

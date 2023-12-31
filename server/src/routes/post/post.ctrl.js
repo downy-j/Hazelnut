@@ -1,8 +1,11 @@
 "use strict";
 
 const { Post, Hashtag } = require("../../models");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
-const output = {
+const gets = {
   posts: async (req, res) => {
     const user = await Post.findAll({ where: { UserId } });
     console.log(`user >> ${user}`);
@@ -10,7 +13,7 @@ const output = {
   },
 };
 
-const process = {
+const posts = {
   uploadPost: async (req, res) => {
     try {
       const post = await Post.create({
@@ -18,6 +21,7 @@ const process = {
         img: req.body.url,
         UserId: req.user.id,
       });
+      console.log("서버 진입은 함??");
       const hashtags = req.body.content.match(/#[^\s#]*/g);
       if (hashtags) {
         const result = await Promise.all(
@@ -29,13 +33,7 @@ const process = {
         );
         await post.addHashtags(result.map((r) => r[0]));
       }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
-    }
-  },
-  deletePost: (req, res) => {
-    try {
+      res.redirect("/");
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -44,6 +42,6 @@ const process = {
 };
 
 module.exports = {
-  output,
-  process,
+  gets,
+  posts,
 };

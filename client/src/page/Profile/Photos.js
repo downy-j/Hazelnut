@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React from "react";
 import "./Photos.css";
 import Cards from "./Cards/PCards";

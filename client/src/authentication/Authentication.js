@@ -16,13 +16,13 @@ function Authentication() {
         <p>
           {active === "login" ? (
             <>
-              이미 계정이 있으신가요 ?
-              <button onClick={handleChange}>Log in</button>
+              계정이 없으신가요 ?
+              <button onClick={() => handleChange()}>Create an account</button>
             </>
           ) : (
             <>
-              계정이 없으신가요 ?
-              <button onClick={() => handleChange()}>Create an account</button>
+              이미 계정이 있으신가요 ?
+              <button onClick={handleChange}>Log in</button>
             </>
           )}
         </p>

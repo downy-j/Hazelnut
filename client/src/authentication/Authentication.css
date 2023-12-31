@@ -45,7 +45,7 @@
   position: relative;
   width: 300px;
 }
-
+.form .inputBox button,
 .form .inputBox input {
   padding: 12px 10px 12px 48px;
   border: none;
@@ -97,7 +97,8 @@
   color: #fff;
   border-right: 1px solid #00dfc4;
 }
-.form .inputBox input[type="submit"] {
+
+.form .inputBox button {
   background: #00dfc4;
   color: #223243;
   padding: 10px 0;

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+/* eslint-disable*/
+
+import React, { useContext, useEffect, useState } from "react";
 import "./Mainpage.css";
 import Sidebar from "../components/Sidebar";
 import Leftbox from "../components/Leftbox";
@@ -7,7 +9,11 @@ import Welcomes from "../modal/Welcomes";
 import Arlams from "../modal/Arlams";
 import Home from "./Home/Home";
 import Profile from "./Profile/Profile";
+import { AuthContext } from "../context/AuthContext";
+
 function Mainpage() {
+  const { user, logoutUser, isLoginLoading } = useContext(AuthContext);
+
   // 알람
   const [isCount, setCount] = useState(0);
 
@@ -24,8 +30,6 @@ function Mainpage() {
     alert("친구를 추가");
   };
 
-  // 유저 로그인 true = 유저, false = 손님
-  const [isUser, setUser] = useState(false);
   return (
     <div className="mainBox df_jcc_aic">
       <Sidebar />
@@ -48,7 +52,7 @@ function Mainpage() {
             <div className="wellcomText" onClick={handleModal}>
               <span>{isWlcomeText}</span>
             </div>
-            {isUser === true ? null : (
+            {user ? null : (
               <div onClick={addFrind} className="addFrind">
                 ➕ <span>친구추가</span>
               </div>
@@ -56,7 +60,7 @@ function Mainpage() {
           </div>
           <div className="containers" style={{ border: "1px solid white" }}>
             <Routes>
-              <Route path="/" element={<Home isUser={isUser} />}></Route>
+              <Route path="/" element={<Home />}></Route>
               <Route path="/:userId/*" element={<Profile />}></Route>
             </Routes>
           </div>

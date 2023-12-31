@@ -1,5 +1,5 @@
 .sideBar {
-  width: 8%;
+  width: 5%;
   height: 100vh;
 
   position: absolute;
@@ -13,6 +13,7 @@
   height: 100vh;
   border: 1px solid white;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
   background-color: #000;

@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React, { useState } from "react";
 import "./Profile.css";
 import { Link, Route, Routes } from "react-router-dom";
@@ -24,11 +26,11 @@ function Profile() {
           사진
         </Link>
         <Link to="/:userId/videos" className="videos">
-          <i class="fa-solid fa-film"></i>
+          <i className="fa-solid fa-film"></i>
           영상
         </Link>
         <Link to="/:userId/saved" className="saved">
-          <i class="fa-regular fa-bookmark"></i>
+          <i className="fa-regular fa-bookmark"></i>
           저장
         </Link>
       </div>

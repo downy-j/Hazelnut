@@ -4,10 +4,11 @@ import { AuthContext } from "../context/AuthContext";
 function Login() {
   const {
     loginUser,
-    isLoginError,
     isLoginInfo,
     updateLoginInfo,
+    isLoginError,
     isLoginLoading,
+    setLoading,
   } = useContext(AuthContext);
   // ===================================
   const [psEye, setPsEye] = useState(false);
@@ -30,10 +31,10 @@ function Login() {
 
       <div className="inputBox">
         <input
-          onChange={(e) =>
-            updateLoginInfo({ ...isLoginInfo, email: e.target.value })
-          }
           type="text"
+          onChange={(e) => {
+            updateLoginInfo({ ...isLoginInfo, email: e.target.value });
+          }}
           required
         />
         <i className="fa-regular fa-envelope"></i>
@@ -42,11 +43,11 @@ function Login() {
 
       <div className="inputBox">
         <input
-          onChange={(e) =>
-            updateLoginInfo({ ...isLoginInfo, password: e.target.value })
-          }
           id="password"
           type="password"
+          onChange={(e) => {
+            updateLoginInfo({ ...isLoginInfo, password: e.target.value });
+          }}
           required
         />
         <i className="fa-solid fa-lock"></i>
@@ -56,12 +57,8 @@ function Login() {
         </div>
       </div>
       <div className="inputBox">
-        <input onClick={isLoginLoading} type="submit" value="로그인" />
-        {isLoginError?.error && (
-          <div>
-            <p>{isLoginError?.message}</p>
-          </div>
-        )}
+        <button type="submit">{isLoginLoading ? "로딩중. ." : "로그인"}</button>
+        {isLoginError?.error && <p>{isLoginError?.message}</p>}
       </div>
     </form>
   );

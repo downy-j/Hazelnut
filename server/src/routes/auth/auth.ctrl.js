@@ -3,42 +3,78 @@
 const bcrypt = require("bcrypt");
 const User = require("../../models/User");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
-const output = {
-  main: (req, res) => {
-    res.json("로그인 성공 메인화면 진입");
-  },
-  logout: (req, res) => {
-    res.json("로그아웃 성공");
-    res.redirect("/login");
-  },
-  login: (req, res) => {
-    res.json("로그인 화면입니다 로그인 하세요.");
-  },
-  register: (req, res) => {
-    res.json("회원가입 화면 입니다 가입하세요.");
-  },
+const logger = require("../../log/log");
+
+// 유저 토큰 만들기
+const createToken = (id) => {
+  const jwtkey = process.env.JWT_SECRET_KEY || "supersecretkey79938884";
+
+  return jwt.sign({ id }, jwtkey, { expiresIn: "3d" });
 };
 
-const process = {
-  login: async (req, res) => {
+const gets = {
+  main: async (req, res) => {
+    logger.info(`GET / 304 홈 "화면으로 이동"`);
+    res.json(`GET / 304 홈 "화면으로 이동"`);
+  },
+
+  logout: (req, res) => {
+    req.logout(() => {
+      res.redirect("/");
+    });
+  },
+  findUser: async (req, res) => {
+    const nick = req.params.userNick;
     try {
-      const { email, password } = req.body;
+      const User_Nick = await User.findOne({ where: { nick } });
 
-      let user = await User.findOne({ where: { email } });
-
-      if (!user) return res.status(400).json("존재하지 않는 사용자입니다.");
-
-      const isValidPassword = await bcrypt.compare(password, user.password);
-
-      if (!isValidPassword)
-        return res.status(400).json("비밀번호가 일치하지 않습니다.");
-
-      res.status(200).json({ id: user.id, email, nick: user.nick });
+      res.status(200).json(User_Nick);
+      logger.info(`GET / 304 홈 "${nick} 정보가져오기"`);
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
     }
+  },
+  getUsers: async (req, res) => {
+    try {
+      const users = await User.findAll();
+
+      res.status(200).json(users);
+      logger.info(`GET / 304 홈 "전체 ${users} 정보가져오기"`);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+};
+
+const posts = {
+  login: async (req, res, next) => {
+    passport.authenticate("local", (authError, user, info) => {
+      if (authError) {
+        console.error(authError);
+        return res.status(400).json(authError);
+      }
+
+      if (!user) {
+        return res.status(400).json(info.message);
+      }
+
+      const token = createToken(user.id);
+
+      return req.login(user, (loginError) => {
+        if (loginError) {
+          console.error(loginError);
+          return res.status(400).json(loginError);
+        }
+        return res
+          .status(200)
+          .json({ id: user.id, nick: user.nick, email: user.email, token });
+      });
+    })(req, res, next);
   },
 
   register: async (req, res) => {
@@ -69,7 +105,12 @@ const process = {
 
       await user.save();
 
-      res.status(200).json({ id: user.id, email, nick: user.nick });
+      const token = createToken(user.id);
+      console.log(`user >> ${JSON.stringify(user)}`);
+
+      res
+        .status(200)
+        .json({ id: user.id, nick: user.nick, email: user.email, token });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -78,6 +119,20 @@ const process = {
 };
 
 module.exports = {
-  output,
-  process,
+  gets,
+  posts,
 };
+
+// const log = (response, url) => {
+//   if (response.err) {
+//     logger.error(
+//       `${url.method} ${url.path} ${url.status} Response: ${response.success}, ${response.err}`
+//     );
+//   } else {
+//     logger.info(
+//       `${url.method} ${url.path} ${url.status} Response: ${response.success} ${
+//         response.message || ""
+//       }`
+//     );
+//   }
+// };
