@@ -6,10 +6,30 @@ const path = require("path");
 const fs = require("fs");
 
 const gets = {
-  posts: async (req, res) => {
-    const user = await Post.findAll({ where: { UserId } });
-    console.log(`user >> ${user}`);
-    res.json(user);
+  findPosts: async (req, res) => {
+    try {
+      const userPosts = await Post.findAll({
+        where: { UserId: req.user.id },
+      });
+      res.status(200).json(userPosts);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+  findPost: async (req, res) => {
+    try {
+      const postId = req.params.postId;
+      console.log(`postId >> ${postId}`);
+
+      const userPost = await Post.findOne({
+        where: { id: postId, UserId: req.user.id },
+      });
+      res.status(200).json(userPost);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
   },
 };
 
@@ -21,7 +41,7 @@ const posts = {
         img: req.body.url,
         UserId: req.user.id,
       });
-      console.log("서버 진입은 함??");
+
       const hashtags = req.body.content.match(/#[^\s#]*/g);
       if (hashtags) {
         const result = await Promise.all(
@@ -41,7 +61,61 @@ const posts = {
   },
 };
 
+const patchs = {
+  updatePost: async (req, res) => {
+    try {
+      const postId = req.params.postId;
+      const content = req.body.content;
+
+      const post = await Post.findOne({
+        where: { id: postId, UserId: req.user.id },
+      });
+
+      await post.update({
+        content,
+      });
+
+      const hashtags = content.match(/#[^\s#]*/g);
+      if (hashtags) {
+        const result = await Promise.all(
+          hashtags.map((tag) => {
+            return Hashtag.findOrCreate({
+              where: { title: tag.slice(1).toLowerCase() },
+            });
+          })
+        );
+        await post.addHashtags(result.map((r) => r[0]));
+      }
+      res.status(200).json({ message: "게시글이 수정 되었습니다." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+};
+
+const deletes = {
+  deletePost: async (req, res) => {
+    try {
+      const postId = req.params.postId;
+
+      const post = await Post.findOne({
+        where: { id: postId, UserId: req.user.id },
+      });
+
+      await post.destroy();
+
+      res.status(200).json({ message: "게시글이 삭제 되었습니다." });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+};
+
 module.exports = {
   gets,
   posts,
+  patchs,
+  deletes,
 };

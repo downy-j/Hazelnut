@@ -8,6 +8,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { loginUser, setLoading } from "./redux/slices/user";
 import { SERVER_URL } from "./utile/service";
 import { AuthContext } from "./context/AuthContext";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,8 +49,6 @@ function App() {
   // const user = useSelector((state) => {
   //   return state.data.user.nick;
   // });
-  console.log(`user >> ${user}`);
-  console.log(`isLoading >> ${isLoading}`);
 
   // const isLoading = useSelector((state) => {
   //   return state.data.user.isLoading;
@@ -64,6 +63,7 @@ function App() {
       ) : (
         <>{user ? <Mainpage /> : <Authentication />}</>
       )} */}
+
       {user ? <Mainpage /> : <Authentication />}
     </div>
   );

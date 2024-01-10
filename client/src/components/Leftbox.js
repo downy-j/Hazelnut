@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Leftbox.css";
+import { PostContext } from "../context/PostContext";
 
 function Leftbox({ isCount }) {
+  const { fileHandler, imgSRC } = useContext(PostContext);
+
   return (
     <div className="leftBox">
       <div className="visit__count df_jcc_aic">
@@ -9,11 +12,16 @@ function Leftbox({ isCount }) {
         <span>total : 0</span>
       </div>
 
-      <img
-        className="df_jcc_aic"
-        src={process.env.PUBLIC_URL + "/img/main/besicImg.jpg"}
-        alt="my__Image"
-      />
+      <div className="imgBox">
+        <img
+          className="df_jcc_aic"
+          src={
+            imgSRC ? imgSRC : process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+          }
+          alt="my__Image"
+        />
+        <input onChange={(e) => fileHandler(e)} type="file" />
+      </div>
 
       <span
         className="conversation__Text"

@@ -1,15 +1,15 @@
 const Sequelize = require("sequelize");
 
 class Post extends Sequelize.Model {
-  static initiate(sequelize) {
-    Post.init(
+  static init(sequelize) {
+    super.init(
       {
         content: {
           type: Sequelize.STRING(140),
           allowNull: false,
         },
         img: {
-          type: Sequelize.STRING(200),
+          type: Sequelize.TEXT,
           allowNull: true,
         },
       },

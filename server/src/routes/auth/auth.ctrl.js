@@ -2,11 +2,13 @@
 
 const bcrypt = require("bcrypt");
 const User = require("../../models/User");
+const UsrInfo = require("../../models/UserInfo");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
 const logger = require("../../log/log");
+const UserInfo = require("../../models/UserInfo");
 
 // 유저 토큰 만들기
 const createToken = (id) => {
@@ -17,37 +19,23 @@ const createToken = (id) => {
 
 const gets = {
   main: async (req, res) => {
-    logger.info(`GET / 304 홈 "화면으로 이동"`);
-    res.json(`GET / 304 홈 "화면으로 이동"`);
+    logger.info(`GET / 304 로그인(회원가입) "로그인 혹은 회원가입을 해주세요"`);
+
+    res.json(`GET / 304 로그인(회원가입) "로그인 혹은 회원가입을 해주세요"`);
   },
 
   logout: (req, res) => {
-    req.logout(() => {
-      res.redirect("/");
-    });
+    // req.logout();
+    res.json({ message: "로그아웃이 성공적으로 이루어졌습니다." });
   },
-  findUser: async (req, res) => {
-    const nick = req.params.userNick;
-    try {
-      const User_Nick = await User.findOne({ where: { nick } });
+  userPage: async (req, res) => {
+    const userNick = req.params.userNick;
 
-      res.status(200).json(User_Nick);
-      logger.info(`GET / 304 홈 "${nick} 정보가져오기"`);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
-    }
-  },
-  getUsers: async (req, res) => {
-    try {
-      const users = await User.findAll();
+    const findUser = await User.findOne({ nick: userNick });
 
-      res.status(200).json(users);
-      logger.info(`GET / 304 홈 "전체 ${users} 정보가져오기"`);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
-    }
+    const loginUserInfo = await UserInfo.create({ UserId: findUser.id });
+
+    res.status(200).json(loginUserInfo);
   },
 };
 
@@ -70,9 +58,13 @@ const posts = {
           console.error(loginError);
           return res.status(400).json(loginError);
         }
-        return res
-          .status(200)
-          .json({ id: user.id, nick: user.nick, email: user.email, token });
+
+        res.status(200).json({
+          id: user.id,
+          nick: user.nick,
+          email: user.email,
+          token,
+        });
       });
     })(req, res, next);
   },
@@ -106,7 +98,8 @@ const posts = {
       await user.save();
 
       const token = createToken(user.id);
-      console.log(`user >> ${JSON.stringify(user)}`);
+
+      await UserInfo.create({ UserId: user.id });
 
       res
         .status(200)

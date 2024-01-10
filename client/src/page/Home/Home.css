@@ -12,7 +12,7 @@
 }
 .mainBox__right .rightBox .homeContainer .recentPostBox,
 .mainBox__right .rightBox .homeContainer .newLogBox,
-.mainBox__right .rightBox .homeContainer .favoriteBox,
+.mainBox__right .rightBox .homeContainer .interestBox,
 .mainBox__right .rightBox .homeContainer .noteBox {
   border-radius: 10px;
   padding: 8px;
@@ -22,13 +22,13 @@
 }
 .mainBox__right .rightBox .homeContainer .recentPostBox .main__text,
 .mainBox__right .rightBox .homeContainer .newLogBox .main__text,
-.mainBox__right .rightBox .homeContainer .favoriteBox .main__text,
+.mainBox__right .rightBox .homeContainer .interestBox .main__text,
 .mainBox__right .rightBox .homeContainer .noteBox .main__text {
   border-bottom: 1px solid white;
 }
 .mainBox__right .rightBox .homeContainer .recentPostBox .main__text h3,
 .mainBox__right .rightBox .homeContainer .newLogBox .main__text h3,
-.mainBox__right .rightBox .homeContainer .favoriteBox .main__text h3,
+.mainBox__right .rightBox .homeContainer .interestBox .main__text h3,
 .mainBox__right .rightBox .homeContainer .noteBox .main__text h3 {
   padding-left: 15px;
   font-weight: 300;
@@ -125,18 +125,18 @@
 }
 
 /* 관심사 */
-.mainBox__right .rightBox .homeContainer .favoriteBox .favorites {
+.mainBox__right .rightBox .homeContainer .interestBox .interests {
   margin-bottom: 15px;
 }
 
-.mainBox__right .rightBox .homeContainer .favoriteBox .favorite {
+.mainBox__right .rightBox .homeContainer .interestBox .interest {
   border: 1px solid white;
   border-radius: 10px;
 }
-.mainBox__right .rightBox .homeContainer .favoriteBox .favoriteList {
+.mainBox__right .rightBox .homeContainer .interestBox .interestList {
   padding: 10px;
 }
-.mainBox__right .rightBox .homeContainer .favoriteBox .favoriteList span {
+.mainBox__right .rightBox .homeContainer .interestBox .interestList span {
   margin: 5px;
   padding: 2px;
   background-color: skyblue;

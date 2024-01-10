@@ -5,7 +5,7 @@ import "./Home.css";
 
 import RecentPost from "./RecentPost";
 import Newlog from "./Newlog";
-import Favorite from "./Favorite";
+import Interest from "./Interest";
 import Note from "./Note";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -32,12 +32,12 @@ function Home() {
         </ul>
       </div>
 
-      <div className="favoriteBox">
+      <div className="interestBox">
         <div className="main__text">
           <h3>관심사</h3>
         </div>
-        <div className="favoriteList">
-          <Favorite />
+        <div className="interestList">
+          <Interest />
         </div>
       </div>
 

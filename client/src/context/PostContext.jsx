@@ -71,6 +71,9 @@ export const PostContextProvider = ({ children, user }) => {
         setImgSRC(reader.result);
       };
     }
+    console.log(
+      `${nick} || ${date} || ${file} || ${fileName} || ${result} || ${imgSRC}`
+    );
   };
 
   const submitPostData = () => {

@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 
 class User extends Sequelize.Model {
-  static initiate(sequelize) {
-    User.init(
+  static init(sequelize) {
+    super.init(
       {
         nick: {
           type: Sequelize.STRING(15),
@@ -24,7 +24,7 @@ class User extends Sequelize.Model {
         underscored: false,
         modelName: "User",
         tableName: "users",
-        paranoid: true,
+        paranoid: false,
         charset: "utf8",
         collate: "utf8_general_ci",
       }
@@ -32,7 +32,6 @@ class User extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.User.hasMany(db.Post);
     db.User.belongsToMany(db.User, {
       foreignKey: "followingId",
       as: "Followers",
@@ -43,6 +42,25 @@ class User extends Sequelize.Model {
       as: "Followings",
       through: "Follow",
     });
+
+    db.User.hasMany(db.Post);
+
+    db.User.hasOne(db.UserInfo);
+
+    db.User.belongsToMany(db.Interest, { through: "UserInterest" });
+
+    db.User.hasMany(db.Note, {
+      foreignKey: "receiverId",
+      as: "ReceivedNotes",
+    });
+    db.User.hasMany(db.Note, {
+      foreignKey: "senderId",
+      as: "SentNotes",
+    });
+
+    db.User.belongsToMany(db.Chat, { through: "UserChat" });
+
+    db.User.belongsToMany(db.Message, { through: "UserMessage" });
   }
 }
 

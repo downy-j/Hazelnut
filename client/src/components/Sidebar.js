@@ -9,6 +9,7 @@ import { logoutUser } from "../redux/slices/user";
 
 function Sidebar() {
   const dispatch = useDispatch();
+
   const { logoutUser } = useContext(AuthContext);
   const [isArrow, setArrow] = useState(false); // 닽힘
   const [isSearch, setSearch] = useState(false); // 닫힘
