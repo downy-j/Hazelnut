@@ -1,18 +1,20 @@
 /* eslint-disable*/
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./Welcomes.css";
+import { UserContext } from "../context/UserContext";
 
-function Welcomes({ setWelcomeText, setText, isText, setWlcome }) {
-  const changeText = (e) => {
-    setText(e.target.value);
-  };
+function Welcomes({ setModal }) {
+  const { isText, setText, updateTextBox } = useContext(UserContext);
+
+  const updateText = () => {};
+
   return (
     <div className="welcomeContainer df-jcc-aic">
       <div className="welcomeBox">
         <div
           onClick={() => {
-            setWlcome("false");
+            setModal(false);
           }}
           className="close df-jcc-aic"
         >
@@ -22,16 +24,14 @@ function Welcomes({ setWelcomeText, setText, isText, setWlcome }) {
         <div className="welcomeForm">
           <input
             onChange={(e) => {
-              changeText(e);
+              setText(e.target.value);
             }}
             type="text"
             required
           />
           <span>대화명 변경</span>
           <input
-            onClick={() => {
-              setWelcomeText(isText);
-            }}
+            onClick={() => updateTextBox(isText)}
             type="submit"
             value="변경"
           />

@@ -26,9 +26,15 @@ sequelize
   });
 
 app.use(express.json()); // JSON 파싱
-app.use(morgan("tiny", { stream: logger.stream })); // 로깅 미들웨어 (tiny 형식으로 로그 출력)
-app.use(cors()); // CORS (Cross-Origin Resource Sharing) 미들웨어
 app.use(express.urlencoded({ extended: false })); // URL 인코딩 파싱
+app.use(morgan("tiny", { stream: logger.stream })); // 로깅 미들웨어 (tiny 형식으로 로그 출력)
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+  })
+); // CORS (Cross-Origin Resource Sharing) 미들웨어
 app.use(cookieParser(process.env.COOKIE_SECRET)); // 쿠키 파서 미들웨어 (쿠키 처리를 위한 라이브러리 사용)
 app.use(
   session({

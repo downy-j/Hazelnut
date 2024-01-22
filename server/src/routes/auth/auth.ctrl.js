@@ -2,40 +2,81 @@
 
 const bcrypt = require("bcrypt");
 const User = require("../../models/User");
-const UsrInfo = require("../../models/UserInfo");
+const UserInfo = require("../../models/UserInfo");
 const validator = require("validator");
-const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
-const logger = require("../../log/log");
-const UserInfo = require("../../models/UserInfo");
-
-// 유저 토큰 만들기
-const createToken = (id) => {
-  const jwtkey = process.env.JWT_SECRET_KEY || "supersecretkey79938884";
-
-  return jwt.sign({ id }, jwtkey, { expiresIn: "3d" });
-};
+// const logger = require("../../log/log");
+const {
+  createUserToken,
+  accessToken,
+  refreshToken,
+} = require("../../../token");
 
 const gets = {
   main: async (req, res) => {
-    logger.info(`GET / 304 로그인(회원가입) "로그인 혹은 회원가입을 해주세요"`);
+    try {
+      // 사용자 ID 확인
+      const userId = req.user ? req.user.id : null;
 
-    res.json(`GET / 304 로그인(회원가입) "로그인 혹은 회원가입을 해주세요"`);
+      if (!userId) {
+        return res
+          .status(304)
+          .json({ message: "로그인 혹은 회원가입을 해주세요" });
+      } else {
+        return res.status(200).json({ message: "환영합니다" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "서버 오류" });
+    }
   },
 
   logout: (req, res) => {
-    // req.logout();
-    res.json({ message: "로그아웃이 성공적으로 이루어졌습니다." });
+    try {
+      res.cookie("accessToken", "");
+      res.status(200).json("Logout Success");
+    } catch (error) {
+      res.status(500).json(error);
+    }
   },
+
   userPage: async (req, res) => {
-    const userNick = req.params.userNick;
+    try {
+      const token = req.cookies.accessToken;
 
-    const findUser = await User.findOne({ nick: userNick });
+      if (!token) {
+        return res.status(401).json({ error: "인증되지 않은 사용자" });
+      }
 
-    const loginUserInfo = await UserInfo.create({ UserId: findUser.id });
+      const userData = await accessToken(token);
+      console.log(`userData >> ${userData}`);
 
-    res.status(200).json(loginUserInfo);
+      if (userData.error) {
+        return res
+          .status(401)
+          .json({ error: "Access Token이 유효하지 않습니다." });
+      }
+
+      const findUser = await User.findOne({
+        where: { id: userData.id },
+      });
+
+      if (!findUser) {
+        return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+      }
+
+      // 이미 생성된 UserInfo 확인
+      let loginUserInfo = await UserInfo.findOne({
+        where: { UserId: findUser.id },
+      });
+      console.log(`loginUserInfo >> ${loginUserInfo}`);
+
+      res.status(200).json(loginUserInfo[0]);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "서버 오류" });
+    }
   },
 };
 
@@ -47,25 +88,26 @@ const posts = {
         return res.status(400).json(authError);
       }
 
-      if (!user) {
-        return res.status(400).json(info.message);
-      }
+      if (!user) return res.status(400).json(info.message);
 
-      const token = createToken(user.id);
-
-      return req.login(user, (loginError) => {
-        if (loginError) {
-          console.error(loginError);
-          return res.status(400).json(loginError);
-        }
+      try {
+        const { accessToken, refreshToken } = createUserToken(
+          user.id,
+          user.nick,
+          user.email
+        );
 
         res.status(200).json({
           id: user.id,
           nick: user.nick,
           email: user.email,
-          token,
+          token: accessToken,
+          refreshToken: refreshToken,
         });
-      });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     })(req, res, next);
   },
 
@@ -90,20 +132,28 @@ const posts = {
             "영문 대소문자 특수기호와 숫자를 포함한 8자 이상으로 만들어주세요"
           );
 
-      user = new User({ email, nick, password });
+      user = new User({ nick, email, password });
 
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
 
       await user.save();
 
-      const token = createToken(user.id);
+      const { accessToken, refreshToken } = createUserToken(
+        user.id,
+        user.nick,
+        user.email
+      );
 
       await UserInfo.create({ UserId: user.id });
 
-      res
-        .status(200)
-        .json({ id: user.id, nick: user.nick, email: user.email, token });
+      res.status(200).json({
+        id: user.id,
+        nick: user.nick,
+        email: user.email,
+        token: accessToken,
+        refreshToken: refreshToken,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).json(error);
@@ -111,9 +161,56 @@ const posts = {
   },
 };
 
+const patchs = {
+  userPage_textBox: async (req, res) => {
+    try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken)
+        return res.status(401).json({ error: "인증되지 않은 사용자" });
+
+      const userData = await accessToken(accToken);
+      if (userData.error) {
+        const refToken = req.cookies.refreshToken;
+        if (!refToken)
+          return res.status(401).json({ error: "Refresh Token이 없습니다." });
+
+        const newAccessTokenResult = refreshToken(refToken);
+        if (newAccessTokenResult.error) {
+          return res
+            .status(401)
+            .json({ error: "Refresh Token이 유효하지 않습니다." });
+        }
+
+        const newAccessToken = newAccessTokenResult.accessToken;
+        return res
+          .status(200)
+          .json({ message: "새로운 Access Token 발급 성공", newAccessToken });
+      }
+
+      const loginUserId = await User.findOne({ where: { id: userData.id } });
+      const textBox = req.body.textBox;
+
+      const findUser = await UserInfo.findOne({
+        where: { UserId: loginUserId },
+      });
+      if (!findUser) {
+        return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+      }
+
+      await findUser.update({ textBox });
+
+      res.status(200).json({ message: "메인 대문글이 수정 되었습니다." });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "서버 오류" });
+    }
+  },
+};
+
 module.exports = {
   gets,
   posts,
+  patchs,
 };
 
 // const log = (response, url) => {

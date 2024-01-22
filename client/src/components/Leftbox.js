@@ -1,22 +1,26 @@
 import React, { useContext } from "react";
 import "./Leftbox.css";
 import { PostContext } from "../context/PostContext";
+import { UserContext } from "../context/UserContext";
 
 function Leftbox({ isCount }) {
   const { fileHandler, imgSRC } = useContext(PostContext);
+  const { isTodays, isTotals, isImageURL } = useContext(UserContext);
 
   return (
     <div className="leftBox">
       <div className="visit__count df_jcc_aic">
-        <span>today : 0</span>
-        <span>total : 0</span>
+        <span>today : {isTodays}</span>
+        <span>total : {isTotals}</span>
       </div>
 
       <div className="imgBox">
         <img
           className="df_jcc_aic"
           src={
-            imgSRC ? imgSRC : process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+            imgSRC
+              ? isImageURL
+              : process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
           }
           alt="my__Image"
         />

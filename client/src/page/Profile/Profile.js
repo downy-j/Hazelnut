@@ -1,13 +1,16 @@
 /* eslint-disable*/
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./Profile.css";
 import { Link, Route, Routes } from "react-router-dom";
 import Photos from "./Photos";
 import Videos from "./Videos";
 import Saved from "./Saved";
+import { UserContext } from "../../context/UserContext";
 
 function Profile() {
+  const { userNick } = useContext(UserContext);
+
   const [isPhotos, setPhotos] = useState([
     {
       img: "/img/photos/unaLee.gif",
@@ -21,15 +24,15 @@ function Profile() {
   return (
     <div className="profileContainer">
       <div className="profile__menu">
-        <Link to="/:userId/photos" className="photos">
+        <Link to={`/${userNick}/photos`} className="photos">
           <i className="fa-solid fa-camera-retro"></i>
           사진
         </Link>
-        <Link to="/:userId/videos" className="videos">
+        <Link to={`/${userNick}/videos`} className="videos">
           <i className="fa-solid fa-film"></i>
           영상
         </Link>
-        <Link to="/:userId/saved" className="saved">
+        <Link to={`/${userNick}/saved`} className="saved">
           <i className="fa-regular fa-bookmark"></i>
           저장
         </Link>

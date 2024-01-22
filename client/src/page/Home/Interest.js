@@ -1,13 +1,18 @@
 /* eslint-disable*/
 
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 function Interest() {
+  const { isInterests } = useContext(UserContext);
   return (
-    <>
-      <span className="interest">위스키</span>
-      <span className="interest">사탕</span>
-    </>
+    <div>
+      {isInterests.map((interest, index) => (
+        <span key={index} className="interest">
+          {interest.interest}
+        </span>
+      ))}
+    </div>
   );
 }
 

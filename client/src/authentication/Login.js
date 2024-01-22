@@ -1,15 +1,32 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useCallback, useEffect, useState } from "react";
+import { SERVER_URL } from "../utile/service";
+import { useDispatch } from "react-redux";
+import { loginUser, setLoading } from "../redux/slices/user";
+
+const loginRequest = async (loginInfo) => {
+  try {
+    const response = await fetch(`${SERVER_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginInfo),
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      return userData;
+    } else {
+      console.log("User is not logged in.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error during login:", error);
+    return null;
+  }
+};
 
 function Login() {
-  const {
-    loginUser,
-    isLoginInfo,
-    updateLoginInfo,
-    isLoginError,
-    isLoginLoading,
-    setLoading,
-  } = useContext(AuthContext);
   // ===================================
   const [psEye, setPsEye] = useState(false);
   const [isEye, setEye] = useState("fa-eye");
@@ -25,15 +42,47 @@ function Login() {
     }
   };
 
+  // 유저 info관련
+  const dispatch = useDispatch();
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+  const updateLoginInfo = useCallback((info) => {
+    setLoginInfo(info);
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    try {
+      dispatch(setLoading(true)); // 로딩 시작
+
+      const userData = await loginRequest(loginInfo);
+
+      if (userData) {
+        dispatch(
+          loginUser({
+            nick: userData.nick,
+            token: userData.token,
+          })
+        );
+        localStorage.setItem("User", JSON.stringify(userData));
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    } finally {
+      dispatch(setLoading(false)); // 로딩 종료
+    }
+  }, [dispatch, loginInfo]);
+
   return (
-    <form className="form" onSubmit={loginUser}>
+    <div className="form">
       <h2>로그인</h2>
 
       <div className="inputBox">
         <input
           type="text"
           onChange={(e) => {
-            updateLoginInfo({ ...isLoginInfo, email: e.target.value });
+            updateLoginInfo({ ...loginInfo, email: e.target.value });
           }}
           required
         />
@@ -46,7 +95,7 @@ function Login() {
           id="password"
           type="password"
           onChange={(e) => {
-            updateLoginInfo({ ...isLoginInfo, password: e.target.value });
+            updateLoginInfo({ ...loginInfo, password: e.target.value });
           }}
           required
         />
@@ -57,10 +106,12 @@ function Login() {
         </div>
       </div>
       <div className="inputBox">
-        <button type="submit">{isLoginLoading ? "로딩중. ." : "로그인"}</button>
-        {isLoginError?.error && <p>{isLoginError?.message}</p>}
+        <button onClick={handleLogin} type="submit">
+          로그인
+        </button>
+        {/* {isLoginError?.error && <p>{isLoginError?.message}</p>} */}
       </div>
-    </form>
+    </div>
   );
 }
 

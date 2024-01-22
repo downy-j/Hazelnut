@@ -1,14 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import { SERVER_URL, postRequest, getRequest } from "../utile/service";
+import { SERVER_URL, postRequest } from "../utile/service";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   // 유저 초기화
   const [user, setUser] = useState(null);
-
-  const [isLoading, setLoading] = useState(false);
 
   // 유저 등록 관련 초기화
   const [isRegisterError, setRegisterError] = useState(null);
@@ -116,9 +114,6 @@ export const AuthContextProvider = ({ children }) => {
         isLoginLoading, // 로그인 로딩
 
         logoutUser, //로그아웃
-
-        isLoading, //로딩
-        setLoading, // 로딩함수
       }}
     >
       {children}

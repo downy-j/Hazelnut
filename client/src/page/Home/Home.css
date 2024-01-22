@@ -58,14 +58,12 @@
   color: blueviolet;
   font-weight: 600;
 }
-.mainBox__right
-  .rightBox
-  .homeContainer
-  .recentPostBox
-  ul
-  li
-  span:nth-child(2) {
-  width: 180px;
+
+.homeContainer ul li .content {
+  width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 새소식, 쪽지*/

@@ -4,68 +4,55 @@ import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import Mainpage from "./page/Mainpage";
 import Authentication from "./authentication/Authentication";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { loginUser, setLoading } from "./redux/slices/user";
-import { SERVER_URL } from "./utile/service";
-import { AuthContext } from "./context/AuthContext";
-import { Route, Routes } from "react-router-dom";
+
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { loginUser } from "./redux/slices/user";
+import { AlertMessage } from "./modal/AlertMessage";
 
 function App() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, isLoading } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   const login = async () => {
-  //     try {
-  //       const response = await fetch(`${SERVER_URL}/login`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(isLoginInfo),
-  //       });
+  const user = useSelector((state) => state.data.user.nick);
 
-  //       if (response.ok) {
-  //         const userData = await response.json();
-  //         dispatch(
-  //           loginUser({
-  //             nick: userData.nick,
-  //             token: userData.token,
-  //           })
-  //         );
-  //         dispatch(setLoading(false));
-  //       } else {
-  //         console.error("Login failed");
-  //         dispatch(setLoading(false));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error during login:", error);
-  //     }
-  //   };
+  const isLoading = useSelector((state) => state.data.user.isLoading);
 
-  //   login();
-  // }, [isLoginInfo]);
+  useEffect(() => {
+    if (isLoading) {
+      console.log("Loading . .");
+    } else {
+      if (user) {
+        navigate(`/${user}`);
+      }
+    }
+  }, [isLoading, user, navigate]);
 
-  // const user = useSelector((state) => {
-  //   return state.data.user.nick;
-  // });
+  useEffect(() => {
+    const storedUser = localStorage.getItem("User");
 
-  // const isLoading = useSelector((state) => {
-  //   return state.data.user.isLoading;
-  // });
+    if (storedUser) {
+      // localStorage에 저장된 사용자 정보가 있다면 Redux 상태에 설정
+      const user = JSON.parse(storedUser);
+      dispatch(loginUser(user));
+    }
+  }, [dispatch]);
 
   return (
-    <div className="app">
-      {/* {isLoading ? (
-        <div className="loader-container">
-          <div className="loader"></div>
-        </div>
-      ) : (
-        <>{user ? <Mainpage /> : <Authentication />}</>
-      )} */}
+    // <div className="app">
+    //   {isLoading ? (
+    //     <div className="loader-container">
+    //       <div className="loader"></div>
+    //     </div>
+    //   ) : (
+    //     <>{user ? <Mainpage /> : <Authentication />}</>
+    //   )}
+    // </div>
 
-      {user ? <Mainpage /> : <Authentication />}
-    </div>
+    <Routes>
+      <Route path="/" element={<Authentication />} />
+      <Route path={`/${user}/*`} element={<Mainpage />} />
+    </Routes>
   );
 }
 

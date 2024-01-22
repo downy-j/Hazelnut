@@ -7,10 +7,10 @@ import RecentPost from "./RecentPost";
 import Newlog from "./Newlog";
 import Interest from "./Interest";
 import Note from "./Note";
-import { AuthContext } from "../../context/AuthContext";
+import { useSelector } from "react-redux";
 
 function Home() {
-  const { user } = useContext(AuthContext);
+  const user = useSelector((state) => state.data.user.nick);
 
   return (
     <div className="homeContainer">
@@ -18,18 +18,16 @@ function Home() {
         <div className="main__text">
           <h3>최근 게시글</h3>
         </div>
-        <ul>
-          <RecentPost />
-        </ul>
+
+        <RecentPost />
       </div>
 
       <div className="newLogBox">
         <div className="main__text">
           <h3>새소식</h3>
         </div>
-        <ul>
-          <Newlog />
-        </ul>
+
+        <Newlog />
       </div>
 
       <div className="interestBox">
@@ -47,9 +45,7 @@ function Home() {
         </div>
         {user ? (
           <div className="noteList">
-            <ul>
-              <Note />
-            </ul>
+            <Note />
           </div>
         ) : (
           <div className="noteSend">

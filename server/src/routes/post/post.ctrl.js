@@ -1,6 +1,6 @@
 "use strict";
 
-const { Post, Hashtag } = require("../../models");
+const { User, Post, Hashtag } = require("../../models");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -8,9 +8,18 @@ const fs = require("fs");
 const gets = {
   findPosts: async (req, res) => {
     try {
+      const userNick = req.params.userNick;
+
+      const user = await User.findOne({ where: { nick: userNick } });
+
+      if (!user) {
+        return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+      }
+
       const userPosts = await Post.findAll({
-        where: { UserId: req.user.id },
+        where: { UserId: user.id },
       });
+
       res.status(200).json(userPosts);
     } catch (error) {
       console.log(error);
@@ -19,12 +28,27 @@ const gets = {
   },
   findPost: async (req, res) => {
     try {
+      const userNick = req.params.userNick;
       const postId = req.params.postId;
-      console.log(`postId >> ${postId}`);
+
+      // 로그인 함? 그럼 초기화 하고 UserId로 조회
+      const whereCondition = {};
+      if (req.user) {
+        whereCondition.UserId = req.user.id;
+      }
+
+      const user = await User.findOne({ where: { nick: userNick } });
+      if (!user) {
+        return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+      }
 
       const userPost = await Post.findOne({
-        where: { id: postId, UserId: req.user.id },
+        where: { id: postId, ...whereCondition, UserId: user.id },
       });
+      if (!userPost) {
+        return res.status(404).json({ error: "게시글을 찾을 수 없습니다." });
+      }
+
       res.status(200).json(userPost);
     } catch (error) {
       console.log(error);

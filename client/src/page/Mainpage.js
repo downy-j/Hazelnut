@@ -1,28 +1,36 @@
 /* eslint-disable*/
 
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "./Mainpage.css";
 import Sidebar from "../components/Sidebar";
 import Leftbox from "../components/Leftbox";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useParams } from "react-router-dom";
 import Welcomes from "../modal/Welcomes";
 import Arlams from "../modal/Arlams";
 import Home from "./Home/Home";
 import Profile from "./Profile/Profile";
-import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/UserContext";
 
 function Mainpage() {
-  const { user, logoutUser, isLoginLoading } = useContext(AuthContext);
+  // user관련
+  const {
+    userNick,
+    setText,
+    updateTextBox,
+
+    isTextBox,
+  } = useContext(UserContext);
+
+  const nick = useSelector((state) => state.data.user.nick);
 
   // 알람
   const [isCount, setCount] = useState(0);
 
   // 대화명
-  const [isWlcome, setWlcome] = useState(false);
-  const [isWlcomeText, setWelcomeText] = useState("대화명을 입력하세요");
-  const [isText, setText] = useState("");
+  const [isModal, setModal] = useState(false); // 모달 열고 닫고
   const handleModal = () => {
-    setWlcome(!isWlcome);
+    setModal(!isModal);
   };
 
   // 친추
@@ -33,12 +41,12 @@ function Mainpage() {
   return (
     <div className="mainBox df_jcc_aic">
       <Sidebar />
-      {isWlcome ? (
+      {isModal ? (
         <Welcomes
-          setWelcomeText={setWelcomeText}
           setText={setText}
-          isText={isText}
-          setWlcome={setWlcome}
+          setModal={setModal}
+          isModal={isModal}
+          updateTextBox={updateTextBox}
         />
       ) : null}
       {<Arlams />}
@@ -50,9 +58,9 @@ function Mainpage() {
         <div className="rightBox">
           <div className="rightTopBox">
             <div className="wellcomText" onClick={handleModal}>
-              <span>{isWlcomeText}</span>
+              <span>{isTextBox}</span>
             </div>
-            {user ? null : (
+            {nick ? null : (
               <div onClick={addFrind} className="addFrind">
                 ➕ <span>친구추가</span>
               </div>
@@ -60,18 +68,18 @@ function Mainpage() {
           </div>
           <div className="containers" style={{ border: "1px solid white" }}>
             <Routes>
-              <Route path="/" element={<Home />}></Route>
-              <Route path="/:userId/*" element={<Profile />}></Route>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<Profile />} />
             </Routes>
           </div>
         </div>
 
         <div className="tabBox">
           <div className="tab___button">
-            <Link to="/">Home</Link>
+            <Link to={`/${userNick}`}>Home</Link>
           </div>
           <div className="tab___button">
-            <Link to="/:userId/photos">Profile</Link>
+            <Link to={`/${userNick}/photos`}>Profile</Link>
           </div>
         </div>
       </div>
