@@ -21,6 +21,7 @@ export const getRequestWithHeaders = async (url, token) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      withCredentials: true,
     });
 
     return response.data;
@@ -36,6 +37,7 @@ export const postRequest = async (url, body) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
 
     return response.data;

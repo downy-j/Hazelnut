@@ -15,24 +15,24 @@ function App() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.data.user.nick);
+  console.log(`user >> ${user}`);
 
   const isLoading = useSelector((state) => state.data.user.isLoading);
 
-  useEffect(() => {
-    if (isLoading) {
-      console.log("Loading . .");
-    } else {
-      if (user) {
-        navigate(`/${user}`);
-      }
-    }
-  }, [isLoading, user, navigate]);
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     console.log("Loading . .");
+  //   } else {
+  //     if (user) {
+  //       navigate(`/${user}`);
+  //     }
+  //   }
+  // }, [isLoading, user, navigate]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("User");
 
     if (storedUser) {
-      // localStorage에 저장된 사용자 정보가 있다면 Redux 상태에 설정
       const user = JSON.parse(storedUser);
       dispatch(loginUser(user));
     }
@@ -48,11 +48,7 @@ function App() {
     //     <>{user ? <Mainpage /> : <Authentication />}</>
     //   )}
     // </div>
-
-    <Routes>
-      <Route path="/" element={<Authentication />} />
-      <Route path={`/${user}/*`} element={<Mainpage />} />
-    </Routes>
+    <>{user ? <Mainpage /> : <Authentication />}</>
   );
 }
 

@@ -1,41 +1,50 @@
 "use strict";
 
 const { User, Post, Hashtag } = require("../../models");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
 const gets = {
   findPosts: async (req, res) => {
     try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+
       const userNick = req.params.userNick;
 
-      const user = await User.findOne({ where: { nick: userNick } });
-
-      if (!user) {
+      const findUser = await User.findOne({ where: { nick: userNick } });
+      if (!findUser) {
         return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
       }
 
       const userPosts = await Post.findAll({
-        where: { UserId: user.id },
+        where: { UserId: findUser.id },
       });
 
       res.status(200).json(userPosts);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     }
   },
   findPost: async (req, res) => {
     try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+
       const userNick = req.params.userNick;
       const postId = req.params.postId;
-
-      // 로그인 함? 그럼 초기화 하고 UserId로 조회
-      const whereCondition = {};
-      if (req.user) {
-        whereCondition.UserId = req.user.id;
-      }
 
       const user = await User.findOne({ where: { nick: userNick } });
       if (!user) {
@@ -43,7 +52,7 @@ const gets = {
       }
 
       const userPost = await Post.findOne({
-        where: { id: postId, ...whereCondition, UserId: user.id },
+        where: { id: postId, UserId: user.id },
       });
       if (!userPost) {
         return res.status(404).json({ error: "게시글을 찾을 수 없습니다." });
@@ -51,8 +60,14 @@ const gets = {
 
       res.status(200).json(userPost);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     }
   },
 };
@@ -60,10 +75,20 @@ const gets = {
 const posts = {
   uploadPost: async (req, res) => {
     try {
+      const { content, url } = req.body;
+
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      const userId = decodedToken.id;
+
       const post = await Post.create({
-        content: req.body.content,
-        img: req.body.url,
-        UserId: req.user.id,
+        content,
+        img: url,
+        UserId: userId,
       });
 
       const hashtags = req.body.content.match(/#[^\s#]*/g);
@@ -77,10 +102,17 @@ const posts = {
         );
         await post.addHashtags(result.map((r) => r[0]));
       }
-      res.redirect("/");
+
+      res.status(200).json(post);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     }
   },
 };
@@ -88,11 +120,19 @@ const posts = {
 const patchs = {
   updatePost: async (req, res) => {
     try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      const userId = decodedToken.id;
+
       const postId = req.params.postId;
       const content = req.body.content;
 
       const post = await Post.findOne({
-        where: { id: postId, UserId: req.user.id },
+        where: { id: postId, UserId: userId },
       });
 
       await post.update({
@@ -121,10 +161,18 @@ const patchs = {
 const deletes = {
   deletePost: async (req, res) => {
     try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      const userId = decodedToken.id;
+
       const postId = req.params.postId;
 
       const post = await Post.findOne({
-        where: { id: postId, UserId: req.user.id },
+        where: { id: postId, UserId: userId },
       });
 
       await post.destroy();

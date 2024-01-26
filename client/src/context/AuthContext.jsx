@@ -1,10 +1,15 @@
 import { createContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { SERVER_URL, postRequest } from "../utile/service";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/slices/user";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   // 유저 초기화
   const [user, setUser] = useState(null);
 
@@ -67,7 +72,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   // 로그인 로직 처리
-  const loginUser = useCallback(
+  const userLogin = useCallback(
     async (e) => {
       e.preventDefault();
 
@@ -85,10 +90,21 @@ export const AuthContextProvider = ({ children }) => {
         return setLoginError(response);
       }
 
-      localStorage.setItem("User", JSON.stringify(response));
-      setUser(response);
+      if (response) {
+        dispatch(
+          loginUser({
+            id: response.id,
+            nick: response.nick,
+            email: response.email,
+          })
+        );
+
+        localStorage.setItem("User", JSON.stringify(response));
+        setUser(response);
+        navigate(`/${response.nick}`);
+      }
     },
-    [isLoginInfo]
+    [dispatch, navigate, isLoginInfo]
   );
 
   // 로그아웃 로직 처리
@@ -107,7 +123,7 @@ export const AuthContextProvider = ({ children }) => {
         isRegisterError, // 등록 에러
         isRegisterLoading, // 등록 로딩
 
-        loginUser, // 로그인
+        userLogin, // 로그인
         isLoginError, // 로그인 에러
         isLoginInfo, // 로그인 정보
         updateLoginInfo, // 로그인 정보 업데이트

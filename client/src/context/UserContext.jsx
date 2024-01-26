@@ -13,7 +13,7 @@ export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [isRecentPosts, setRecentPosts] = useState([]);
-  const userToken = useSelector((state) => state.data.user.token) || null;
+  const [accessToken, setAccessToken] = useState("");
   const userNick = useSelector((state) => state.data.user.nick) || null;
 
   // DB에서 갖고옴
@@ -24,30 +24,45 @@ export const UserContextProvider = ({ children }) => {
 
   // DB에 데이터 수정을 위해 담을 그릇
   const [isText, setText] = useState("");
-  console.log(`isText >> ${JSON.stringify(isText)}`);
 
   const [isInterests, setInterests] = useState([]);
 
   const [isNotes, setNotes] = useState([]);
 
+  // 쿠키 가져오기
+  const getCookies = (name) => {
+    const cookies = document.cookie.split("; ");
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split("=");
+      if (cookieName === name) {
+        setAccessToken(cookieValue);
+      }
+    }
+    return null;
+  };
+
   // userInfo 로직( get, patch )
   useEffect(() => {
     const userInfos = async () => {
+      const accToken = getCookies("accessToken");
       try {
-        if (userNick) {
-          const response = await getRequest(`${SERVER_URL}/${userNick}`);
+        if (accToken.error) {
+        } else {
+          if (userNick) {
+            const response = await getRequest(`${SERVER_URL}/${userNick}`);
 
-          const todays = JSON.stringify(response.today);
-          setTodays(todays);
+            const todays = JSON.stringify(response.today);
+            setTodays(todays);
 
-          const totals = JSON.stringify(response.total);
-          setTotals(totals);
+            const totals = JSON.stringify(response.total);
+            setTotals(totals);
 
-          const myImage = JSON.stringify(response.imgURL);
-          setImageURL(myImage);
+            const myImage = JSON.stringify(response.imgURL);
+            setImageURL(myImage);
 
-          const textBox = JSON.stringify(response.textBox);
-          setTextBox(textBox);
+            const textBox = JSON.stringify(response.textBox);
+            setTextBox(textBox);
+          }
         }
       } catch (error) {
         console.error("유저 정보를 가져오는데 실패했습니다:", error);
@@ -62,7 +77,6 @@ export const UserContextProvider = ({ children }) => {
         `${SERVER_URL}/update/userInfo/textBox`,
         { textBox: updatedValue }
       );
-      console.log(`response >> ${response}`);
       setTextBox(response);
     } catch (error) {
       console.error(error);
@@ -99,12 +113,10 @@ export const UserContextProvider = ({ children }) => {
     const getNotes = async () => {
       try {
         if (userNick) {
-          console.log("진입함?");
+          getCookies("accessToken");
           const response = await getRequestWithHeaders(
-            `${SERVER_URL}/${userNick}/notes`,
-            userToken
+            `${SERVER_URL}/${userNick}/notes`
           );
-          console.log(`getNote_response >> ${JSON.stringify(response)}`);
 
           if (response.error) {
             console.error("유저의 쪽지를 불러오는데 에러 발생", response.error);

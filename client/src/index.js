@@ -15,15 +15,15 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>
-    <UserContextProvider>
-      <PostContextProvider>
-        <AuthContextProvider>
-          <BrowserRouter>
+    <BrowserRouter>
+      <UserContextProvider>
+        <PostContextProvider>
+          <AuthContextProvider>
             <App />
-          </BrowserRouter>
-        </AuthContextProvider>
-      </PostContextProvider>
-    </UserContextProvider>
+          </AuthContextProvider>
+        </PostContextProvider>
+      </UserContextProvider>
+    </BrowserRouter>
   </Provider>
 );
 

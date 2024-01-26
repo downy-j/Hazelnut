@@ -3,51 +3,42 @@
 const { User, Chat, Message } = require("../../models");
 
 const gets = {
-  findUserChats: async (req, res) => {
+  getRooms: async (req, res) => {
     try {
-      const userId = req.params.userId;
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
 
-      const userChats = await User.findByPk(userId, {
-        include: [{ model: Chat, as: "chats", through: "UserChat" }],
-      });
-
-      res.status(200).json(userChats.chats);
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     }
   },
   findChat: async (req, res) => {
     try {
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({ error: "서버 오류" });
+      }
     }
   },
 };
 
 const posts = {
-  createChat: async (req, res) => {
-    try {
-      const userId = req.user.id;
-      const user = await User.findByPk(userId);
-
-      const chatRoom = await Chat.create({
-        title: req.body.title,
-      });
-
-      await user.addChat(chatRoom);
-
-      const userChats = await User.findByPk(userId, {
-        include: [{ model: Chat, as: "chats" }],
-      });
-
-      res.status(200).json(userChats.chats);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
-    }
-  },
+  createChat: async (req, res) => {},
 };
 
 module.exports = {

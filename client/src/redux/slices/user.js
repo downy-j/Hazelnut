@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  id: null,
   nick: null,
-  token: null,
+  email: null,
   isLoading: true,
 };
 
@@ -11,16 +12,26 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action) => {
-      state.nick = action.payload.nick;
-      state.token = action.payload.token;
+      return {
+        ...state,
+        id: action.payload.id,
+        nick: action.payload.nick,
+        email: action.payload.email,
+      };
     },
     logoutUser: (state) => {
-      state.nick = null;
-      state.token = null;
-      localStorage.removeItem("User");
+      return {
+        ...state,
+        id: null,
+        nick: null,
+        email: null,
+      };
     },
     setLoading: (state, action) => {
-      state.isLoading = action.payload;
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
     },
   },
 });
