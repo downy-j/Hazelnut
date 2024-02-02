@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Sidebar.css";
 
 import Search from "../modal/Search";
@@ -7,10 +7,13 @@ import Make from "../modal/Make";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/slices/user";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { userLogout } = useContext(AuthContext);
 
   const [isArrow, setArrow] = useState(false); // 닽힘
   const [isSearch, setSearch] = useState(false); // 닫힘
@@ -52,7 +55,7 @@ function Sidebar() {
   };
 
   const logoutHandler = () => {
-    dispatch(logoutUser());
+    userLogout();
     navigate("/");
   };
 

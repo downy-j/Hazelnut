@@ -39,8 +39,8 @@
 }
 /* right top box */
 .mainBox__right .rightBox .rightTopBox {
-  margin-bottom: 10px;
-  padding: 0 20px;
+  /* margin-bottom: 10px;
+  padding: 0 20px; */
 
   display: flex;
   justify-content: space-between;
@@ -61,7 +61,7 @@
 
 .mainBox__right .rightBox {
   width: 95%;
-  height: 90vh;
+  height: 95%;
   border: 1px solid white;
 
   padding: 15px;
@@ -69,5 +69,5 @@
 .mainBox__right .rightBox .containers {
   padding: 10px;
   width: 100%;
-  height: 90%;
+  height: 95%;
 }

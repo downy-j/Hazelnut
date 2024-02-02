@@ -13,14 +13,18 @@ const formatDate = (dateString) => {
 const gets = {
   userInfo: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
+      console.log(`accToken >> ${accToken}`);
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
 
       const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      console.log(`decodedToken >> ${JSON.stringify(decodedToken)}`);
 
       const pageOwner = req.params.userNick;
+      console.log(`pageOwner >> ${pageOwner}`);
 
       const findUser = await User.findOne({ where: { nick: pageOwner } });
       if (!findUser) {
@@ -46,7 +50,8 @@ const gets = {
 
   recentPost: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -87,7 +92,8 @@ const gets = {
 
   note: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -147,7 +153,8 @@ const gets = {
 
   interest: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -179,7 +186,8 @@ const gets = {
 
   findUser: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -203,7 +211,8 @@ const gets = {
 
   getUsers: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -228,7 +237,8 @@ const gets = {
 const posts = {
   follow: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -275,7 +285,8 @@ const posts = {
   },
   interest: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -316,7 +327,8 @@ const posts = {
   },
   note: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -359,9 +371,10 @@ const posts = {
 };
 
 const patchs = {
-  userInfo_textBox: async (req, res) => {
+  updateOnLineID: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -378,7 +391,7 @@ const patchs = {
 
       await findUser.update({ textBox });
 
-      res.status(200).json({ message: "메인 대문글이 수정 되었습니다." });
+      res.status(200).json(textBox);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({
@@ -394,7 +407,8 @@ const patchs = {
 const deletes = {
   interest: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }

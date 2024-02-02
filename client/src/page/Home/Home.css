@@ -19,6 +19,8 @@
   border: 1px solid white;
   display: flex;
   flex-direction: column;
+  min-width: 100%;
+  min-height: 100%;
 }
 .mainBox__right .rightBox .homeContainer .recentPostBox .main__text,
 .mainBox__right .rightBox .homeContainer .newLogBox .main__text,
@@ -32,6 +34,50 @@
 .mainBox__right .rightBox .homeContainer .noteBox .main__text h3 {
   padding-left: 15px;
   font-weight: 300;
+}
+.mainBox__right .rightBox .homeContainer .noteBox .main__text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mainBox__right .rightBox .homeContainer .noteBox .main__text .pagingBox {
+  padding: 5px;
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .noteBox
+  .main__text
+  .pagingBox
+  button {
+  margin: 0 5px;
+  background: none;
+  border: 2px solid #ffffff;
+  transition: border-color 0.3s;
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .noteBox
+  .main__text
+  .pagingBox
+  button.clicked {
+  border: 2px solid #ffd700;
+  box-shadow: -1px -1px 4px rgba(255, 215, 0, 0.7),
+    1px 1px 4px rgba(255, 215, 0, 0.35),
+    inset -1px -1px 4px rgba(255, 215, 0, 0.7),
+    inset 1px 1px 4px rgba(255, 215, 0, 0.35);
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .noteBox
+  .main__text
+  .pagingBox
+  button
+  i {
+  color: #ffffff;
+  font-size: 1.7em;
 }
 
 /* 최근 게시글 */
@@ -60,7 +106,7 @@
 }
 
 .homeContainer ul li .content {
-  width: 350px;
+  width: 430px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

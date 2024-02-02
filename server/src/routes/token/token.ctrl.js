@@ -35,14 +35,14 @@ const gets = {
         },
         process.env.ACCESS_SECRET,
         {
-          expiresIn: "1m",
+          expiresIn: "24h",
           issuer: "Downy",
         }
       );
 
       res.cookie("accessToken", accessToken, {
-        secure: false,
-        httpOnly: true,
+        // secure: false,
+        // httpOnly: true,
       });
 
       res.status(200).json("Access Token Recreated");

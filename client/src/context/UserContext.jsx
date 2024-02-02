@@ -1,10 +1,13 @@
+/* eslint-disable*/
+
 import { createContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import {
   SERVER_URL,
   postRequest,
+  accessToken,
+  refreshToken,
   getRequest,
-  getRequestWithHeaders,
   patchRequest,
 } from "../utile/service";
 import { useSelector } from "react-redux";
@@ -12,30 +15,44 @@ import { useSelector } from "react-redux";
 export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
-  const [isRecentPosts, setRecentPosts] = useState([]);
-  const [accessToken, setAccessToken] = useState("");
-  const userNick = useSelector((state) => state.data.user.nick) || null;
+  const user = useSelector((state) => state.data.user.nick) || null; // 로그인 유저
+  const [thisUser, setThisUser] = useState(null);
 
-  // DB에서 갖고옴
+  const [isErrorMessage, setErrorMessage] = useState("");
+
+  //
   const [isTodays, setTodays] = useState("");
   const [isTotals, setTotals] = useState("");
+
+  //
   const [isImageURL, setImageURL] = useState("");
-  const [isTextBox, setTextBox] = useState("");
+  const [updateImageURL, setUpdateImageURL] = useState("");
 
-  // DB에 데이터 수정을 위해 담을 그릇
-  const [isText, setText] = useState("");
+  //
+  const [isTextBox, setTextBox] = useState(null);
+  const [updateText, setUpdateText] = useState("");
 
+  // 최신글 불러오기
+  const [isRecentPosts, setRecentPosts] = useState([]);
+
+  // 관신사 불러오기, 관심사 추가하기
   const [isInterests, setInterests] = useState([]);
+  const [addInterest, setAddInterest] = useState("");
 
+  // 쪽지 불러오기, 쪽지 보내기
   const [isNotes, setNotes] = useState([]);
+  const [sendNote, setSendNote] = useState("");
 
   // 쿠키 가져오기
   const getCookies = (name) => {
-    const cookies = document.cookie.split("; ");
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split("=");
-      if (cookieName === name) {
-        setAccessToken(cookieValue);
+    const cookies = document.cookie;
+    const cookieArray = cookies.split(";");
+
+    for (let i = 0; i < cookieArray.length; i++) {
+      const cookie = cookieArray[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        const cookieValue = cookie.substring(name.length + 1);
+        return cookieValue;
       }
     }
     return null;
@@ -46,50 +63,62 @@ export const UserContextProvider = ({ children }) => {
     const userInfos = async () => {
       const accToken = getCookies("accessToken");
       try {
-        if (accToken.error) {
-        } else {
-          if (userNick) {
-            const response = await getRequest(`${SERVER_URL}/${userNick}`);
+        if (thisUser) {
+          const response = await getRequest(
+            `${SERVER_URL}/${thisUser}`,
+            accToken
+          );
 
-            const todays = JSON.stringify(response.today);
-            setTodays(todays);
+          const todays = JSON.stringify(response.today);
+          setTodays(todays);
 
-            const totals = JSON.stringify(response.total);
-            setTotals(totals);
+          const totals = JSON.stringify(response.total);
+          setTotals(totals);
 
-            const myImage = JSON.stringify(response.imgURL);
-            setImageURL(myImage);
+          const myImage = JSON.stringify(response.imgURL);
+          setImageURL(myImage);
 
-            const textBox = JSON.stringify(response.textBox);
-            setTextBox(textBox);
-          }
+          const textBox = JSON.stringify(response.textBox);
+          setTextBox(textBox);
         }
       } catch (error) {
         console.error("유저 정보를 가져오는데 실패했습니다:", error);
+        setErrorMessage("유저 정보를 가져오는데 실패했습니다");
       }
     };
     userInfos();
-  }, [userNick]);
+  }, [thisUser]);
 
-  const updateTextBox = async (updatedValue) => {
-    try {
+  // 대화명 바꾸기
+  const updateOnLineID = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const accToken = getCookies("accessToken");
+
       const response = await patchRequest(
         `${SERVER_URL}/update/userInfo/textBox`,
-        { textBox: updatedValue }
+        { textBox: updateText },
+        accToken
       );
+
+      if (response.error) {
+        return setRegisterError(response);
+      }
       setTextBox(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    },
+    [updateText]
+  );
 
   // recentPost( get )
   useEffect(() => {
     const getRecentPost = async () => {
+      const accToken = getCookies("accessToken");
       try {
-        if (userNick) {
+        if (thisUser) {
           const response = await getRequest(
-            `${SERVER_URL}/${userNick}/recentPost`
+            `${SERVER_URL}/${thisUser}/recentPost`,
+            accToken
           );
 
           if (response.error) {
@@ -106,16 +135,17 @@ export const UserContextProvider = ({ children }) => {
       }
     };
     getRecentPost();
-  }, [userNick]);
+  }, [thisUser]);
 
   // note (get, post, delete)
   useEffect(() => {
     const getNotes = async () => {
+      const accToken = getCookies("accessToken");
       try {
-        if (userNick) {
-          getCookies("accessToken");
-          const response = await getRequestWithHeaders(
-            `${SERVER_URL}/${userNick}/notes`
+        if (thisUser) {
+          const response = await getRequest(
+            `${SERVER_URL}/${thisUser}/notes`,
+            accToken
           );
 
           if (response.error) {
@@ -125,19 +155,22 @@ export const UserContextProvider = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error(" 쪽지를 불러올수 없습니다.:", error);
+        console.error("쪽지를 불러올수 없습니다.:", error);
       }
     };
+
     getNotes();
-  }, [isNotes]);
+  }, [thisUser]);
 
   // interest(get, post, delete)
   useEffect(() => {
     const getInterests = async () => {
+      const accToken = getCookies("accessToken");
       try {
-        if (userNick) {
+        if (thisUser) {
           const response = await getRequest(
-            `${SERVER_URL}/${userNick}/interest`
+            `${SERVER_URL}/${thisUser}/interest`,
+            accToken
           );
 
           if (response.error) {
@@ -154,7 +187,7 @@ export const UserContextProvider = ({ children }) => {
       }
     };
     getInterests();
-  }, [userNick]);
+  }, [thisUser]);
 
   // follow(post, delete)
   // findUser
@@ -163,21 +196,25 @@ export const UserContextProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        userNick,
+        user,
         isRecentPosts,
+        isErrorMessage,
 
         isTodays,
         isTotals,
         isImageURL,
         isTextBox,
-        updateTextBox,
 
-        setText,
-        isText,
+        updateOnLineID,
+        setUpdateText,
+        updateText,
 
         isInterests,
 
         isNotes,
+
+        setThisUser,
+        thisUser,
       }}
     >
       {children}

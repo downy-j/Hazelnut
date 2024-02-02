@@ -13,16 +13,10 @@ import Profile from "./Profile/Profile";
 import { UserContext } from "../context/UserContext";
 
 function Mainpage() {
+  const { userNick } = useParams();
+
   // user관련
-  const {
-    userNick,
-    setText,
-    updateTextBox,
-
-    isTextBox,
-  } = useContext(UserContext);
-
-  const nick = useSelector((state) => state.data.user.nick);
+  const { thisUser, isTextBox, user, setThisUser } = useContext(UserContext);
 
   // 알람
   const [isCount, setCount] = useState(0);
@@ -38,17 +32,20 @@ function Mainpage() {
     alert("친구를 추가");
   };
 
+  useEffect(() => {
+    if (user === userNick) {
+      // 로그인한사람과 파라메터가 같을때
+      setThisUser(user);
+    } else {
+      //로그인 한사람과 파라메터가 다를때
+      setThisUser(userNick);
+    }
+  }, [thisUser]);
+
   return (
     <div className="mainBox df_jcc_aic">
       <Sidebar />
-      {isModal ? (
-        <Welcomes
-          setText={setText}
-          setModal={setModal}
-          isModal={isModal}
-          updateTextBox={updateTextBox}
-        />
-      ) : null}
+      {isModal ? <Welcomes setModal={setModal} isModal={isModal} /> : null}
       {<Arlams />}
       <div className="mainBox__left df_jce_aic">
         <Leftbox isCount={isCount} />
@@ -60,7 +57,7 @@ function Mainpage() {
             <div className="wellcomText" onClick={handleModal}>
               <span>{isTextBox}</span>
             </div>
-            {nick ? null : (
+            {user && user !== userNick && (
               <div onClick={addFrind} className="addFrind">
                 ➕ <span>친구추가</span>
               </div>
@@ -76,10 +73,10 @@ function Mainpage() {
 
         <div className="tabBox">
           <div className="tab___button">
-            <Link to={`/${userNick}`}>Home</Link>
+            <Link to={`/${thisUser}`}>Home</Link>
           </div>
           <div className="tab___button">
-            <Link to={`/${userNick}/photos`}>Profile</Link>
+            <Link to={`/${thisUser}/photos`}>Profile</Link>
           </div>
         </div>
       </div>

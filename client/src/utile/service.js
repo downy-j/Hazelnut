@@ -3,25 +3,13 @@ import axios from "axios";
 export const SERVER_URL = "http://localhost:5000";
 
 // GET - whit out header
-export const getRequest = async (url) => {
-  try {
-    const response = await axios.get(url);
-
-    return response.data;
-  } catch (error) {
-    throw new Error(extractErrorMessage(error));
-  }
-};
-
-// GET - whit header
-export const getRequestWithHeaders = async (url, token) => {
+export const getRequest = async (url, token) => {
   try {
     const response = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      withCredentials: true,
     });
 
     return response.data;
@@ -31,15 +19,15 @@ export const getRequestWithHeaders = async (url, token) => {
 };
 
 // POST
-export const postRequest = async (url, body) => {
+export const postRequest = async (url, body, accToken) => {
   try {
     const response = await axios.post(url, body, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accToken}`,
       },
       withCredentials: true,
     });
-
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));
@@ -47,11 +35,12 @@ export const postRequest = async (url, body) => {
 };
 
 // PATCH
-export const patchRequest = async (url, body) => {
+export const patchRequest = async (url, body, accToken) => {
   try {
     const response = await axios.patch(url, body, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accToken}`,
       },
     });
     return response.data;

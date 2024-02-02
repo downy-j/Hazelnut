@@ -10,7 +10,7 @@ function Newlog() {
         <img src={process.env.PUBLIC_URL + "/img/main/besicImg.jpg"} alt="" />
         <Link to="#">
           <span>downy</span>
-          <span>님이 게시글을 좋아합니다</span>
+          <span className="content">님이 게시글을 좋아합니다</span>
           <span>12.09</span>
         </Link>
       </li>

@@ -61,6 +61,8 @@ class User extends Sequelize.Model {
     db.User.belongsToMany(db.Chat, { through: "UserChat" });
 
     db.User.belongsToMany(db.Message, { through: "UserMessage" });
+
+    db.User.hasOne(db.RefreshToken);
   }
 }
 

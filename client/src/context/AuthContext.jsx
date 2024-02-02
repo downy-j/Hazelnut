@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import { SERVER_URL, postRequest } from "../utile/service";
+import { SERVER_URL, getRequest, postRequest } from "../utile/service";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../redux/slices/user";
+import { loginUser, logoutUser } from "../redux/slices/user";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
@@ -65,10 +65,21 @@ export const AuthContextProvider = ({ children }) => {
         return setRegisterError(response);
       }
 
-      localStorage.setItem("User", JSON.stringify(response));
-      setUser(response);
+      if (response) {
+        dispatch(
+          loginUser({
+            id: response.id,
+            nick: response.nick,
+            email: response.email,
+          })
+        );
+
+        localStorage.setItem("User", JSON.stringify(response));
+        setUser(response);
+        navigate(`/${response.nick}`);
+      }
     },
-    [isRegisterInfo]
+    [dispatch, navigate, isRegisterInfo]
   );
 
   // 로그인 로직 처리
@@ -108,10 +119,22 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   // 로그아웃 로직 처리
-  const logoutUser = useCallback(async () => {
-    localStorage.removeItem("User");
-    setUser(null);
-  }, []);
+  const userLogout = useCallback(async () => {
+    try {
+      // 스토리지에서 유저 정보 제거
+      localStorage.removeItem("User");
+
+      // 리듀서에서 유저 정보 제거
+      dispatch(logoutUser());
+
+      // 토큰 제거
+      await postRequest(`${SERVER_URL}/logout`);
+
+      setUser(null);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch]);
 
   return (
     <AuthContext.Provider
@@ -129,7 +152,7 @@ export const AuthContextProvider = ({ children }) => {
         updateLoginInfo, // 로그인 정보 업데이트
         isLoginLoading, // 로그인 로딩
 
-        logoutUser, //로그아웃
+        userLogout, //로그아웃
       }}
     >
       {children}

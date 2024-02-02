@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./AlertMessage.css";
+import { UserContext } from "../context/UserContext";
 
-function AlertMessage({ message }) {
+function AlertMessage() {
+  const { isErrorMessage } = useContext(UserContext);
   return (
     <div className="alert-container">
-      <div className="alert-message">{message}</div>
+      <div className="alert-message">{isErrorMessage}</div>
     </div>
   );
 }

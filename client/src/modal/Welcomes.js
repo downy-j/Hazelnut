@@ -5,12 +5,10 @@ import "./Welcomes.css";
 import { UserContext } from "../context/UserContext";
 
 function Welcomes({ setModal }) {
-  const { isText, setText, updateTextBox } = useContext(UserContext);
-
-  const updateText = () => {};
+  const { setUpdateText, updateOnLineID } = useContext(UserContext);
 
   return (
-    <div className="welcomeContainer df-jcc-aic">
+    <form className="welcomeContainer df-jcc-aic" onSubmit={updateOnLineID}>
       <div className="welcomeBox">
         <div
           onClick={() => {
@@ -24,20 +22,16 @@ function Welcomes({ setModal }) {
         <div className="welcomeForm">
           <input
             onChange={(e) => {
-              setText(e.target.value);
+              setUpdateText(e.target.value);
             }}
             type="text"
             required
           />
           <span>대화명 변경</span>
-          <input
-            onClick={() => updateTextBox(isText)}
-            type="submit"
-            value="변경"
-          />
+          <input type="submit" value="변경" />
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 

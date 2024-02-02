@@ -11,9 +11,11 @@ const jwt = require("jsonwebtoken");
 
 const gets = {
   main: async (req, res) => {
-    const user = req.cookies.refreshToken;
+    const user = req.cookies.accessToken;
     if (!user) {
-      res.status(200).json(`Wellcom. This is Hazelnut's!`);
+      res
+        .status(200)
+        .json(`Wellcom. This is Hazelnut's! Log in and enjoy the service..`);
     } else {
       res.status(200).json(`Wellcom ${user.nick}. Enjoy our service.`);
     }
@@ -25,7 +27,7 @@ const gets = {
       res.cookie("refreshToken", "");
       res.status(200).json("Logout Success");
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({ message: "에러 로그아웃 실패" });
     }
   },
 };
@@ -49,7 +51,7 @@ const posts = {
           },
           process.env.ACCESS_SECRET,
           {
-            expiresIn: "1m",
+            expiresIn: "24h",
             issuer: "Downy",
           }
         );
@@ -67,14 +69,16 @@ const posts = {
           }
         );
 
+        // accessToken을 쿠키에 저장하기
         res.cookie("accessToken", accessToken, {
-          secure: false,
-          httpOnly: true,
+          // secure: false,
+          // httpOnly: true,
         });
 
+        // refreshToken은 서버에 저장하기
         res.cookie("refreshToken", refreshToken, {
-          secure: false,
-          httpOnly: true,
+          // secure: false,
+          // httpOnly: true,
         });
 
         res.status(200).json({
@@ -82,7 +86,6 @@ const posts = {
           nick: user.nick,
           email: user.email,
           accessToken: accessToken,
-          refreshToken: refreshToken,
         });
       } catch (error) {
         console.error(error);
@@ -119,22 +122,42 @@ const posts = {
 
       await user.save();
 
-      const { accessToken, refreshToken } = createUserToken(
-        user.id,
-        user.nick,
-        user.email
-      );
-
       await UserInfo.create({ UserId: user.id });
 
+      const accessToken = jwt.sign(
+        {
+          id: user.id,
+          nick: user.nick,
+          email: user.email,
+        },
+        process.env.ACCESS_SECRET,
+        {
+          expiresIn: "24h",
+          issuer: "Downy",
+        }
+      );
+
+      const refreshToken = jwt.sign(
+        {
+          id: user.id,
+          nick: user.nick,
+          email: user.email,
+        },
+        process.env.REFRESH_SECRET,
+        {
+          expiresIn: "24h",
+          issuer: "Downy",
+        }
+      );
+
       res.cookie("accessToken", accessToken, {
-        secure: false,
-        httpOnly: true,
+        // secure: false,
+        // httpOnly: true,
       });
 
       res.cookie("refreshToken", refreshToken, {
-        secure: false,
-        httpOnly: true,
+        // secure: false,
+        // httpOnly: true,
       });
 
       res.status(200).json({
@@ -142,7 +165,6 @@ const posts = {
         nick: user.nick,
         email: user.email,
         accessToken: accessToken,
-        refreshToken: refreshToken,
       });
     } catch (error) {
       console.log(error);
