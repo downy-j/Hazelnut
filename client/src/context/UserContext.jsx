@@ -4,11 +4,13 @@ import { createContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import {
   SERVER_URL,
-  postRequest,
-  accessToken,
-  refreshToken,
   getRequest,
   patchRequest,
+  postRequest,
+  deleteRequest,
+  imgPostRequest,
+  accessToken,
+  refreshToken,
 } from "../utile/service";
 import { useSelector } from "react-redux";
 
@@ -24,9 +26,11 @@ export const UserContextProvider = ({ children }) => {
   const [isTodays, setTodays] = useState("");
   const [isTotals, setTotals] = useState("");
 
-  //
-  const [isImageURL, setImageURL] = useState("");
-  const [updateImageURL, setUpdateImageURL] = useState("");
+  // 내프로필 URL, 내프로필 Name
+  const [myProfileImageURL, setMyProfileImageURL] = useState(null); // 서버에서 받은 url
+  const [myProfileImageName, setMyProfileImageName] = useState(""); // 정제된 파일명
+  const [isImage, setImage] = useState(null); //
+  const [preViewBox, setPreViewBox] = useState(null);
 
   //
   const [isTextBox, setTextBox] = useState(null);
@@ -36,12 +40,18 @@ export const UserContextProvider = ({ children }) => {
   const [isRecentPosts, setRecentPosts] = useState([]);
 
   // 관신사 불러오기, 관심사 추가하기
-  const [isInterests, setInterests] = useState([]);
-  const [addInterest, setAddInterest] = useState("");
+  const [indexOfInterest, setIndexOfInterest] = useState(null); // item id 담기
+
+  const [addInterest, setAddInterest] = useState(""); // 입력값을 담을 상태
+  const [isInterests, setInterests] = useState([]); // 서버 응답을 담을 배열 상태
 
   // 쪽지 불러오기, 쪽지 보내기
-  const [isNotes, setNotes] = useState([]);
-  const [sendNote, setSendNote] = useState("");
+  const [sendNote, setSendNote] = useState(""); // 입력값을 담을 상태
+  const [isNotes, setNotes] = useState([]); // 서버 응답을 담을 배열 상태
+
+  // 유저찾기
+  const [searchUserValue, setSearchUserValue] = useState(""); // 입력값을 담을 상태
+  const [searchUserResults, setSearchUserResults] = useState([]); // 서버 응답을 담을 배열 상태
 
   // 쿠키 가져오기
   const getCookies = (name) => {
@@ -56,6 +66,42 @@ export const UserContextProvider = ({ children }) => {
       }
     }
     return null;
+  };
+
+  // 내 프로필사진 데이터 정제와 프리뷰
+  const myProfilePreview = (e) => {
+    const file = e.target.files[0];
+
+    setImage(file); // 사진한장 담음
+
+    if (file) {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setPreViewBox(reader.result);
+      };
+    }
+  };
+
+  // 내 프로필 사진 등록
+  const myProfileImage = async () => {
+    try {
+      const accToken = getCookies("accessToken");
+
+      const formData = new FormData();
+      formData.append("image", isImage);
+      formData.append("fileName", myProfileImageName);
+
+      const response = await imgPostRequest(
+        `${SERVER_URL}/${thisUser}/profileImage`,
+        formData,
+        accToken
+      );
+
+      console.log(`response >> ${JSON.stringify(response)}`);
+    } catch (error) {
+      console.error("유저 프로필 사진 가져오는데 실패했습니다:", error);
+    }
   };
 
   // userInfo 로직( get, patch )
@@ -76,7 +122,9 @@ export const UserContextProvider = ({ children }) => {
           setTotals(totals);
 
           const myImage = JSON.stringify(response.imgURL);
-          setImageURL(myImage);
+          const replaceImage = myImage.replace(/\\/g, "/");
+          console.log(`replaceImage >> ${replaceImage}`);
+          setMyProfileImageURL(myImage);
 
           const textBox = JSON.stringify(response.textBox);
           setTextBox(textBox);
@@ -137,7 +185,7 @@ export const UserContextProvider = ({ children }) => {
     getRecentPost();
   }, [thisUser]);
 
-  // note (get, post, delete)
+  // note (get)
   useEffect(() => {
     const getNotes = async () => {
       const accToken = getCookies("accessToken");
@@ -162,7 +210,7 @@ export const UserContextProvider = ({ children }) => {
     getNotes();
   }, [thisUser]);
 
-  // interest(get, post, delete)
+  // interest(get)
   useEffect(() => {
     const getInterests = async () => {
       const accToken = getCookies("accessToken");
@@ -189,8 +237,58 @@ export const UserContextProvider = ({ children }) => {
     getInterests();
   }, [thisUser]);
 
+  // interest(post)
+  const addMyInterest = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const accToken = getCookies("accessToken");
+      const response = postRequest(
+        `${SERVER_URL}/interest`,
+        { interest: addInterest },
+        accToken
+      );
+      console.log(`response >> ${JSON.stringify(response)}`);
+
+      if (response.error) {
+        console.error(response);
+      }
+    },
+    [addInterest]
+  );
+
+  // interest(delete)
+  useEffect(() => {
+    if (indexOfInterest) {
+      const accToken = getCookies("accessToken");
+      deleteRequest(`${SERVER_URL}/interest/${indexOfInterest}`, accToken);
+    }
+  }, [indexOfInterest]);
+
   // follow(post, delete)
+
   // findUser
+  const findUserCB = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        const accToken = getCookies("accessToken");
+        const response = await getRequest(
+          `${SERVER_URL}/${searchUserValue}/find`,
+          accToken
+        );
+
+        if (response.error) {
+          setErrorMessage(response.error);
+        } else {
+          setSearchUserResults(response);
+        }
+      } catch (error) {
+        console.error("Error occurred while fetching user:", error);
+      }
+    },
+    [searchUserValue]
+  );
   // getUsers
 
   return (
@@ -202,19 +300,31 @@ export const UserContextProvider = ({ children }) => {
 
         isTodays,
         isTotals,
-        isImageURL,
         isTextBox,
+        myProfilePreview,
+        preViewBox,
+        myProfileImage,
+        myProfileImageURL,
 
         updateOnLineID,
         setUpdateText,
         updateText,
 
         isInterests,
+        setIndexOfInterest,
+        addMyInterest,
+        setAddInterest,
 
         isNotes,
 
         setThisUser,
         thisUser,
+
+        // 유저 검색
+        findUserCB,
+        setSearchUserValue,
+        searchUserValue,
+        searchUserResults,
       }}
     >
       {children}

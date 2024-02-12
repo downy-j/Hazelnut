@@ -1,69 +1,77 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import { SERVER_URL, postRequest } from "../utile/service";
+import { SERVER_URL, getRequest, postRequest } from "../utile/service";
+import { UserContext } from "./UserContext";
 
 export const PostContext = createContext();
 
 export const PostContextProvider = ({ children, user }) => {
-  const [selectedFile, setSelectedFile] = useState(null); // 서버로 갈거다
-  const [imgSRC, setImgSRC] = useState(null); // img src에 들어감
+  const { thisUser } = useContext(UserContext);
+  const [imgSRC, setImgSRC] = useState(null); // 내가 업로드할 사진 파일 미리보기
+
+  const [selectedFile, setSelectedFile] = useState(null); // 미리보기 이미지
+
+  const [imageURL, setImageURL] = useState(null); // 이미지 URL 들어갈거임
+  const [imageName, setImageName] = useState(""); // 이미지명 들어갈거임
+  const [postContent, setPostContent] = useState(null); // 작성한 글 담을 그릇
+  const [postImg, setPostImg] = useState(null); // 사진담을 그릇
+
+  // 쿠키 가져오기
+  const getCookies = (name) => {
+    const cookies = document.cookie;
+    const cookieArray = cookies.split(";");
+
+    for (let i = 0; i < cookieArray.length; i++) {
+      const cookie = cookieArray[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        const cookieValue = cookie.substring(name.length + 1);
+        return cookieValue;
+      }
+    }
+    return null;
+  };
 
   // 포스팅 관련 초기화
-  const [isPostError, setPostError] = useState(null);
-  const [isPostLoading, setPostLoading] = useState(false);
-  const [isPostInfo, setPostInfo] = useState({
-    content: "",
-    img: "",
-    UserId: "",
-  });
 
-  // 포스팅 정보를 업데이트 하는 콜백 함수
-  const updatePostInfo = useCallback((info) => {
-    setPostInfo(info);
-  }, []);
+  // 사진 가져오기, 글도 가져오기
+  // useEffect(() => {
+  //   const bringItPostImgAll = async () => {
+  //     const accToken = getCookies("accessToken");
 
-  // 포스팅 로직 처리
-  const posting = useCallback(
-    async (e) => {
-      e.preventDefault();
+  //     try {
+  //       const response = await getRequest(
+  //         `${SERVER_URL}/${thisUser}/posts`,
+  //         accToken
+  //       );
 
-      setPostLoading(true);
-      setPostError(null);
+  //       if (response.error) {
+  //         console.error("사진 가져오기 에러", response.error);
+  //       }
+  //       setImageURL(response);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   bringItPostImgAll();
+  // }, [thisUser]);
 
-      const response = await postRequest(
-        `${SERVER_URL}/post`,
-        JSON.stringify(isPostInfo)
-      );
-      console.log("3번");
+  // 사진 업로드, 글도 업로드
+  // const uploadItPostImg = useCallback();
 
-      setPostLoading(false);
+  // postHandler
 
-      if (response.error) {
-        console.log("4번");
-        return setPostError(response);
-      }
-      console.log("5번");
-    },
-    [isPostInfo]
-  );
-
-  /**
-   * nick : 로그인한 유저의 nick
-   * date : 현재날짜
-   * file : 파일정보
-   * fileName : 파일명.확장자
-   * result : 파일명
-   * reader.result : 선택한 파일 미리보기위한 경로
-   */
+  // 업로드 전 사진파일 미리보기용
   const fileHandler = (e) => {
     const { nick } = JSON.parse(localStorage.getItem("User"));
-    const date = new Date().toISOString().slice(0, 10);
+    const nowDate = new Date().toISOString().slice(0, 10);
     const file = e.target.files[0];
     const fileName = (file || {}).name || "";
     const result = fileName.slice(0, fileName.lastIndexOf(".")) || "noFileName";
 
-    setSelectedFile(`${nick}_${result}_${date}`);
+    // 이거 출력되면 담아서 서버에보낼 파일명될놈임
+    setSelectedFile(`${nick}_${result}_${nowDate}`);
 
+    // 여기서 미리보기할 파일을 담음
     if (file) {
       let reader = new FileReader();
       reader.readAsDataURL(file);
@@ -71,9 +79,6 @@ export const PostContextProvider = ({ children, user }) => {
         setImgSRC(reader.result);
       };
     }
-    console.log(
-      `${nick} || ${date} || ${file} || ${fileName} || ${result} || ${imgSRC}`
-    );
   };
 
   const submitPostData = () => {
@@ -90,12 +95,9 @@ export const PostContextProvider = ({ children, user }) => {
         imgSRC,
         fileHandler,
         submitPostData,
+        setPostContent,
 
-        posting,
-        isPostError,
-        isPostInfo,
-        updatePostInfo,
-        isPostLoading,
+        // posting,
       }}
     >
       {children}

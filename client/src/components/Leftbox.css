@@ -32,6 +32,7 @@
 .mainBox__left .leftBox .imgBox img {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .mainBox__left .leftBox .imgBox input[type="file"] {
   position: absolute;
@@ -41,6 +42,12 @@
   top: 0;
   opacity: 0;
   cursor: pointer;
+}
+.mainBox__left .leftBox .imgBox .imgSubmitBtn {
+  position: absolute;
+  z-index: 999;
+  bottom: 0;
+  left: 35%;
 }
 
 .conversation__Text {

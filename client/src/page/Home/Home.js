@@ -9,6 +9,7 @@ import Interest from "./Interest";
 import Note from "./Note";
 import { useSelector } from "react-redux";
 import { UserContext } from "../../context/UserContext";
+import AddInterest from "../../modal/AddInterest";
 
 function Home() {
   const { isNotes, thisUser } = useContext(UserContext);
@@ -48,6 +49,12 @@ function Home() {
     }
   }, [leftBtn, rightBtn]);
 
+  // 관심사 추가 모달
+  const [isAddInterestModal, setAddInterestModal] = useState(false);
+  const InterestHandleModal = () => {
+    setAddInterestModal(!isAddInterestModal);
+  };
+
   return (
     <div className="homeContainer">
       <div className="recentPostBox">
@@ -69,7 +76,15 @@ function Home() {
       <div className="interestBox">
         <div className="main__text">
           <h3>관심사</h3>
+          <div className="addInterestBtn">
+            <button onClick={InterestHandleModal} className="addBtn">
+              ➕
+            </button>
+          </div>
         </div>
+        {isAddInterestModal ? (
+          <AddInterest setAddInterestModal={setAddInterestModal} />
+        ) : null}
         <div className="interestList">
           <Interest />
         </div>

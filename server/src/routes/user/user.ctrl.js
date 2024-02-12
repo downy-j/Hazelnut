@@ -15,16 +15,13 @@ const gets = {
     try {
       const accToken =
         req.headers.authorization && req.headers.authorization.split(" ")[1];
-      console.log(`accToken >> ${accToken}`);
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
 
       const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
-      console.log(`decodedToken >> ${JSON.stringify(decodedToken)}`);
 
       const pageOwner = req.params.userNick;
-      console.log(`pageOwner >> ${pageOwner}`);
 
       const findUser = await User.findOne({ where: { nick: pageOwner } });
       if (!findUser) {
@@ -195,9 +192,24 @@ const gets = {
       const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
 
       const nick = req.params.userNick;
-      const User_Nick = await User.findOne({ where: { nick } });
+      const userWithInfo = await User.findAll({
+        where: { nick },
+        include: [
+          {
+            model: UserInfo,
+            attributes: ["imgURL", "textBox"],
+          },
+        ],
+        attributes: ["id", "nick", "email"],
+      });
 
-      res.status(200).json(User_Nick);
+      if (!userWithInfo) {
+        return res
+          .status(404)
+          .json({ error: "해당 닉네임을 가진 사용자를 찾을 수 없습니다." });
+      }
+
+      res.status(200).json(userWithInfo);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({
@@ -402,11 +414,58 @@ const patchs = {
       }
     }
   },
+
+  myProFileImage: async (req, res) => {
+    try {
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      console.log(`★ decodedToken >> ${JSON.stringify(decodedToken)}`);
+
+      const userNick = req.params.userNick;
+
+      const findUser = await User.findOne({
+        where: { nick: userNick },
+      });
+
+      if (!findUser) {
+        return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
+      }
+      console.log(`★ findUser >> ${JSON.stringify(findUser)}`);
+
+      let userInfo = await UserInfo.findOne({
+        where: { UserId: findUser.id },
+      });
+      console.log(`★ userInfo >> ${JSON.stringify(userInfo)}`);
+
+      // 해당 파라메터와 로그인한 사람이 동일 인물일때만 DB에 값 넣을거
+      if (findUser.id === decodedToken.id) {
+        // 이미지 정보를 DB에 저장
+        const imagePath = req.file.path;
+        console.log(`★ imagePath >> ${imagePath}`);
+
+        await userInfo.update({ imgURL: imagePath });
+      }
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        res.status(401).json({
+          error: "토큰이 만료되었습니다. 새로운 토큰을 요청하세요.",
+        });
+      } else {
+        res.status(500).json({ error: "서버 오류" });
+      }
+    }
+  },
 };
 
 const deletes = {
   interest: async (req, res) => {
     try {
+      console.log("진입함?");
       const accToken =
         req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {

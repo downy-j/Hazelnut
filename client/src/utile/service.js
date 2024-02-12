@@ -28,6 +28,24 @@ export const postRequest = async (url, body, accToken) => {
       },
       withCredentials: true,
     });
+    console.log(`response >> ${response.data}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
+
+// ImgPost
+export const imgPostRequest = async (url, body, accToken) => {
+  try {
+    const response = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accToken}`,
+      },
+      withCredentials: true,
+    });
+    console.log(`response >> ${response.data}`);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));
@@ -43,6 +61,22 @@ export const patchRequest = async (url, body, accToken) => {
         Authorization: `Bearer ${accToken}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
+
+// DELETE
+export const deleteRequest = async (url, accToken) => {
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accToken}`,
+      },
+    });
+    console.log(`deleteRequest >> ${JSON.stringify(response)}`);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));

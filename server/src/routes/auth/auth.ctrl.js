@@ -6,8 +6,44 @@ const UserInfo = require("../../models/UserInfo");
 const validator = require("validator");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
+const multer = require("multer");
 
 // const logger = require("../../log/log");
+
+const ensureDirectoryExists = (directory) => {
+  try {
+    //  폴더의 존재 여부 확인
+    fs.readdirSync(directory);
+  } catch (error) {
+    // 에러가 발생하면(폴더가 없으면) 폴더 생성
+    console.error(`${directory} 폴더가 없어 ${directory} 폴더를 생성합니다.`);
+    fs.mkdirSync(directory);
+  }
+};
+
+const createFolder = (userNick) => {
+  try {
+    // uploads 폴더 확인 및 생성
+    const uploadsDir = path.join(__dirname, "..", "..", "..", "uploads");
+    ensureDirectoryExists(uploadsDir);
+
+    // /:userNick 폴더 확인 및 생성
+    const userDir = path.join(uploadsDir, userNick);
+    ensureDirectoryExists(userDir);
+
+    // post 폴더 확인 및 생성
+    const postDir = path.join(userDir, "post");
+    ensureDirectoryExists(postDir);
+
+    // myImage 폴더
+    const myImage = path.join(userDir, "myImage");
+    ensureDirectoryExists(myImage);
+  } catch (error) {
+    console.log("이미 개인폴더 소유중입니다");
+  }
+};
 
 const gets = {
   main: async (req, res) => {
@@ -166,6 +202,8 @@ const posts = {
         email: user.email,
         accessToken: accessToken,
       });
+
+      createFolder(user.nick);
     } catch (error) {
       console.log(error);
       res.status(500).json(error);

@@ -7,7 +7,6 @@ const morgan = require("morgan");
 const passport = require("passport");
 const dotenv = require("dotenv");
 
-const PORT = process.env.PORT || 5000; // 서버 포트
 const main = require("./src/routes"); // 라우팅 - 주소
 const { sequelize } = require("./src/models"); // sequelize - db
 const logger = require("./src/log/log"); // widston - log
@@ -65,6 +64,4 @@ app.use((err, req, res, next) => {
   res.json("error");
 });
 
-app.listen(PORT, () => {
-  console.log(`${PORT}번 포트 열림.`);
-});
+module.exports = app;

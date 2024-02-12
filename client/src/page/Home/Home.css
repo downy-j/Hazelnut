@@ -177,8 +177,13 @@
   border: 1px solid white;
   border-radius: 10px;
 }
-.mainBox__right .rightBox .homeContainer .interestBox .interestList {
+.mainBox__right .rightBox .homeContainer .interestBox .interest_item {
   padding: 10px;
+}
+.mainBox__right .rightBox .homeContainer .interestBox .interestList {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
 }
 .mainBox__right .rightBox .homeContainer .interestBox .interestList span {
   margin: 5px;
@@ -186,4 +191,52 @@
   background-color: skyblue;
   color: black;
   font-weight: 600;
+}
+.interestBox .main__text {
+  display: flex;
+  justify-content: space-between;
+}
+.interestBox .main__text .addInterestBtn {
+  position: relative;
+  right: 10px;
+  bottom: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.interestBox .main__text .addInterestBtn .addBtn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+.interestBox .main__text .addInterestBtn .addBtn:hover {
+  transform: rotateZ(360deg);
+}
+
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .interestBox
+  .interestList
+  .interest_item {
+  display: flex;
+  position: relative;
+}
+.mainBox__right
+  .rightBox
+  .homeContainer
+  .interestBox
+  .interestList
+  .interest_item
+  .deleteBtn {
+  position: absolute;
+  cursor: pointer;
+  border: 1px solid wheat;
+  border-radius: 50%;
+  font-size: 0.5em;
+  background: #ffffff;
+  right: 3px;
 }

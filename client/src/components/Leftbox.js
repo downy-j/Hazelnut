@@ -1,11 +1,22 @@
 import React, { useContext } from "react";
 import "./Leftbox.css";
-import { PostContext } from "../context/PostContext";
 import { UserContext } from "../context/UserContext";
 
 function Leftbox({ isCount }) {
-  const { fileHandler, imgSRC } = useContext(PostContext);
-  const { isTodays, isTotals, isImageURL } = useContext(UserContext);
+  const {
+    isTodays,
+    isTotals,
+    myProfilePreview,
+    preViewBox,
+    myProfileImage,
+    myProfileImageURL,
+    setPreViewBox,
+  } = useContext(UserContext);
+
+  const normalizeImagePath = (imagePath) => {
+    setPreViewBox(null);
+    return imagePath.replace(/\\/g, "/");
+  };
 
   return (
     <div className="leftBox">
@@ -18,13 +29,18 @@ function Leftbox({ isCount }) {
         <img
           className="df_jcc_aic"
           src={
-            imgSRC
-              ? isImageURL
-              : process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+            preViewBox === null
+              ? process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+              : preViewBox
           }
           alt="my__Image"
         />
-        <input onChange={(e) => fileHandler(e)} type="file" />
+        <input type="file" name="file" onChange={myProfilePreview} />
+        {preViewBox && (
+          <button onClick={myProfileImage} className="imgSubmitBtn">
+            적용하기
+          </button>
+        )}
       </div>
 
       <span

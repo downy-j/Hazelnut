@@ -9,3 +9,94 @@
   background: #000;
   z-index: 1;
 }
+
+.searchBox .searchInput {
+  padding: 10px;
+  margin: 5px;
+  display: flex;
+}
+.searchBox .searchInput:focus-within {
+  border: 1px solid #ffffff;
+  border-radius: 9px;
+}
+.searchBox .searchInput input {
+  margin: 0 5px;
+}
+.searchBox .searchInput input[type="text"] {
+  background: none;
+  border: 1px solid wheat;
+  border-radius: 10px;
+  flex: 0.8;
+  color: #ffffff;
+  padding: 3px;
+  left: 5px;
+  text-indent: 15px;
+}
+.searchBox .searchInput input[type="text"]:focus {
+  box-shadow: -3px -3px 5px rgb(255, 255, 255, 0.7),
+    3px 3px 5px rgba(255, 255, 255, 0.35),
+    inset -3px -3px 5px rgb(255, 255, 255, 0.7),
+    inset 3px 3px 5px rgba(255, 255, 255, 0.35);
+}
+.searchBox .searchInput input[type="submit"] {
+  flex: 0.2;
+}
+
+/* 유저 목록 디자인 */
+.searchResult {
+  width: 100%;
+  height: 90%;
+}
+.searchResult .peopleBox {
+  display: flex;
+  padding: 10px;
+  margin: 5px;
+  border-bottom: 3px solid white;
+  cursor: pointer;
+}
+
+.searchResult .peopleBox img {
+  width: 20%;
+  height: 20%;
+}
+.searchResult .peopleBox .userInfo {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  margin: 0 5px;
+  width: 100%;
+}
+.searchResult .peopleBox .userInfo .user_Name {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+.searchResult .peopleBox .userInfo .user_Text {
+  width: 85%;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 마우스 올리면 뜨는 버튼 */
+.searchResult .peopleBox .LinkBtn {
+  border: 1px solid wheat;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  padding: 5px;
+}
+
+.searchResult .peopleBox .LinkBtn .goUserPage,
+.searchResult .peopleBox .LinkBtn .goUserChat {
+  padding: 3px;
+  transform: 0.5s;
+}
+
+.searchResult .peopleBox .LinkBtn .goUserChat:hover {
+  border: 1px solid wheat;
+}
+.searchResult .peopleBox .LinkBtn .goUserPage:hover {
+  border: 1px solid wheat;
+}

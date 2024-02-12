@@ -5,21 +5,9 @@ import "./Make.css";
 import { PostContext } from "../context/PostContext";
 
 function Make({ makeHandler }) {
-  const {
-    selectedFile,
-    imgSRC,
-    fileHandler,
+  const { selectedFile, imgSRC, fileHandler, setPostContent, posting } =
+    useContext(PostContext);
 
-    posting,
-    isPostError,
-    isPostInfo,
-    updatePostInfo,
-    isPostLoading,
-  } = useContext(PostContext);
-
-  const handlerSubmit = () => {
-    isPostLoading;
-  };
   return (
     <div className="makeBody">
       <div className="makeBox">
@@ -42,18 +30,12 @@ function Make({ makeHandler }) {
             <div className="textBox">
               <textarea
                 onChange={(e) => {
-                  updatePostInfo({
-                    ...isPostInfo,
-                    content: e.target.value,
-                    img: selectedFile,
-                  });
+                  setPostContent(e.target.value);
                 }}
                 className="textarea"
               ></textarea>
             </div>
-            <button onClick={handlerSubmit} type="submit">
-              보내기
-            </button>
+            <button type="submit">보내기</button>
           </form>
         )}
 

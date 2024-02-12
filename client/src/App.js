@@ -1,6 +1,8 @@
 /* eslint-disable*/
 
 import "./App.css";
+import socket from "./server";
+
 import { useDispatch, useSelector } from "react-redux";
 import Mainpage from "./page/Mainpage";
 import Authentication from "./authentication/Authentication";
@@ -10,6 +12,7 @@ import { useContext, useEffect } from "react";
 import { loginUser } from "./redux/slices/user";
 import AlertMessage from "./modal/AlertMessage";
 import { UserContext } from "./context/UserContext";
+import Message from "./page/Message";
 
 function App() {
   const { thisUser, setThisUser, user } = useContext(UserContext);
@@ -26,6 +29,8 @@ function App() {
       dispatch(loginUser(user));
     }
   }, [dispatch]);
+
+  useEffect(() => {});
 
   return (
     // <div className="app">

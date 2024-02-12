@@ -76,6 +76,8 @@ const posts = {
   uploadPost: async (req, res) => {
     try {
       const { content, url } = req.body;
+      console.log(`content >> ${content}`);
+      console.log(`url >> ${url}`);
 
       const accToken = req.cookies.accessToken;
       if (!accToken) {

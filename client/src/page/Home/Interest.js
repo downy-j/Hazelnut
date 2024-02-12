@@ -1,18 +1,56 @@
 /* eslint-disable*/
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 
 function Interest() {
-  const { isInterests } = useContext(UserContext);
+  const { isInterests, setIndexOfInterest, deleteInterestItem } =
+    useContext(UserContext);
+  // console.log(`isInterests >> ${JSON.stringify(isInterests[3].id)}`);
+
+  const [isHover, setHover] = useState(
+    new Array(isInterests.length).fill(false)
+  );
+
+  const handleMouseEnter = (index) => {
+    setHover((prev) => {
+      const newIsHover = [...prev];
+      newIsHover[index] = true;
+      return newIsHover;
+    });
+  };
+
+  const handleMouseLeave = (index) => {
+    const copyHoverState = [...isHover];
+    copyHoverState[index] = false;
+    setHover(copyHoverState);
+  };
+
+  const deleteHandler = (id) => {
+    setIndexOfInterest(id);
+  };
+
   return (
-    <div>
+    <>
       {isInterests.map((interest, index) => (
-        <span key={index} className="interest">
-          {interest.interest}
-        </span>
+        <div
+          key={index}
+          className="interest_item"
+          onMouseEnter={() => handleMouseEnter(index)}
+          onMouseLeave={() => handleMouseLeave(index)}
+        >
+          <span className="interest">{interest.interest}</span>
+          {isHover[index] && (
+            <button
+              onClick={() => deleteHandler(interest.id)}
+              className="deleteBtn"
+            >
+              ❌
+            </button>
+          )}
+        </div>
       ))}
-    </div>
+    </>
   );
 }
 

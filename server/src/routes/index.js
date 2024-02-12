@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
 
 const router = express.Router();
 
@@ -9,6 +11,43 @@ const userCtrl = require("./user/user.ctrl");
 const chatCtrl = require("./chat/chat.ctrl");
 const tokenCtrl = require("./token/token.ctrl");
 const modulsCtrl = require("./moduls/moduls.ctrl");
+
+// 유저 고유폴더 찾기
+const userFolder = (nick) => {
+  const serverDir = path.resolve(__dirname, "..", ".."); // server 폴더까지의 상대 경로 설정
+
+  const userDir = path.join(serverDir, "uploads", nick); // 유저의 폴더 경로 설정
+
+  const myImageDir = path.join(userDir, "myImage"); // 유저 폴더 안의 myImage 폴더 경로 설정
+
+  return myImageDir;
+};
+
+// 사진등록 미들웨어
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const userNick = req.params.userNick;
+    cb(null, userFolder(userNick));
+  },
+
+  filename: function (req, file, cb) {
+    const userNick = req.params.userNick;
+    const nowDate = new Date().toISOString().slice(0, 10);
+    const fileName = file.originalname;
+    const result = `${userNick}_${nowDate}_${fileName}`;
+
+    cb(null, result);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// 내 이미지 등록, DB에 저장까지
+router.post(
+  "/:userNick/profileImage",
+  upload.single("image"),
+  userCtrl.patchs.myProFileImage
+);
 
 // tokenCtrl
 router.get("/accessToken", tokenCtrl.gets.accessToken);
@@ -22,12 +61,12 @@ router.post("/login", authCtrl.posts.login); // 로그인
 
 router.post(
   "/register",
-  modulsCtrl.moduls.createFolder // 내 이름으로된 폴더 생성
+  authCtrl.posts.register // 회원가입
 ); // 회원등록
 
 // postCtrl
 router.get("/:userNick/posts", postCtrl.gets.findPosts); // 해당 페이지 유저의 게시글 전부 가져오기(방문객 로그인한 나 모두 볼수 있음)
-router.get("/:userNick/post/:postId", postCtrl.gets.findPost); // 해당 페이지 유저의 시글 하나 가져오기(방문객 로그인한 나 모두 볼수 있음)
+router.get("/:userNick/post/:postId", postCtrl.gets.findPost); // 해당 페이지 유저의 게시글 하나 가져오기(방문객 로그인한 나 모두 볼수 있음)
 
 router.post("/uploadFiles/post", (req, res) => {
   modulsCtrl.moduls.uploadFiles(req, res, "post");
@@ -49,7 +88,7 @@ router.post("/:userNick/follow", userCtrl.posts.follow); // 로그인한 내가 
 router.post("/interest", userCtrl.posts.interest); // 로그인한 내가 내 관심사 등록
 router.post("/:userNick/note", userCtrl.posts.note); // 로그인한 내가 너에게(userNick) 쪽지 등록
 
-router.patch("/update/userInfo/textBox", userCtrl.patchs.updateOnLineID);
+router.patch("/update/userInfo/textBox", userCtrl.patchs.updateOnLineID); // 대화상자 업뎃
 
 router.delete("/:userNick/unfollow", userCtrl.deletes.unfollow); // 로그인한 내가 너를 언팔하기
 router.delete("/note/:noteId", userCtrl.deletes.note); // 로그인한 내가 내 쪽지 삭제

@@ -3,21 +3,21 @@ import "./Sidebar.css";
 
 import Search from "../modal/Search";
 import Make from "../modal/Make";
+import Message from "../page/Message";
 
 import { useDispatch } from "react-redux";
-import { logoutUser } from "../redux/slices/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const { userLogout } = useContext(AuthContext);
 
   const [isArrow, setArrow] = useState(false); // 닽힘
   const [isSearch, setSearch] = useState(false); // 닫힘
   const [isMake, setMake] = useState(false); // 닫힘
+  const [isMessage, setMessage] = useState(false);
 
   useEffect(() => {
     if (!isArrow) {
@@ -38,6 +38,7 @@ function Sidebar() {
     if (isArrow === true && isSearch === true) {
       setArrow(false);
       setSearch(false);
+      document.querySelector(".sideBar__button").style.left = "23%";
     }
   };
 
@@ -52,8 +53,21 @@ function Sidebar() {
 
   const makeHandler = () => {
     setMake(!isMake);
+    setSearch(false);
+    if (isSearch === false) {
+      document.querySelector(".sideBar__button").style.left = "5%";
+    }
   };
 
+  const messageHandler = () => {
+    setMessage(!isMessage);
+    setSearch(false);
+    if (!isSearch) {
+      document.querySelector(".sideBar__button").style.left = "23%";
+    } else {
+      document.querySelector(".sideBar__button").style.left = "5%";
+    }
+  };
   const logoutHandler = () => {
     userLogout();
     navigate("/");
@@ -71,9 +85,9 @@ function Sidebar() {
               <div onClick={makeHandler} className="menu__button">
                 <i className="fa-regular fa-pen-to-square"></i>
               </div>
-              <div className="menu__button">
+              <Link to="/message" className="menu__button">
                 <i className="fa-regular fa-message"></i>
-              </div>
+              </Link>
             </div>
             <div className="sideBottom__btnBox">
               <div onClick={logoutHandler} className="menu__button">
