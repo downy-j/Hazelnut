@@ -24,23 +24,24 @@ const userFolder = (nick) => {
 };
 
 // 사진등록 미들웨어
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const userNick = req.params.userNick;
-    cb(null, userFolder(userNick));
-  },
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      const userNick = req.params.userNick;
+      cb(null, userFolder(userNick));
+    },
 
-  filename: function (req, file, cb) {
-    const userNick = req.params.userNick;
-    const nowDate = new Date().toISOString().slice(0, 10);
-    const fileName = file.originalname;
-    const result = `${userNick}_${nowDate}_${fileName}`;
+    filename: function (req, file, cb) {
+      const userNick = req.params.userNick;
+      const nowDate = new Date().toISOString().slice(0, 10);
+      const fileName = file.originalname;
+      const result = `${userNick}_${nowDate}_${fileName}`;
 
-    cb(null, result);
-  },
+      cb(null, result);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
-
-const upload = multer({ storage: storage });
 
 // 내 이미지 등록, DB에 저장까지
 router.post(

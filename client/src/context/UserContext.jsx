@@ -98,7 +98,8 @@ export const UserContextProvider = ({ children }) => {
         accToken
       );
 
-      console.log(`response >> ${JSON.stringify(response)}`);
+      // 미리보기 null로 만들기
+      setPreViewBox(null);
     } catch (error) {
       console.error("유저 프로필 사진 가져오는데 실패했습니다:", error);
     }
@@ -122,8 +123,7 @@ export const UserContextProvider = ({ children }) => {
           setTotals(totals);
 
           const myImage = JSON.stringify(response.imgURL);
-          const replaceImage = myImage.replace(/\\/g, "/");
-          console.log(`replaceImage >> ${replaceImage}`);
+          console.log(`myImage >> ${myImage}`);
           setMyProfileImageURL(myImage);
 
           const textBox = JSON.stringify(response.textBox);

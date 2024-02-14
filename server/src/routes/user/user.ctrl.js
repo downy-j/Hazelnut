@@ -30,9 +30,18 @@ const gets = {
 
       let loginUserInfo = await UserInfo.findOne({
         where: { UserId: findUser.id },
+        attributes: ["id", "imgURL", "today", "total", "textBox"],
       });
 
-      res.status(200).json(loginUserInfo);
+      const response = {
+        id: loginUserInfo.id,
+        imgURL: loginUserInfo.imgURL,
+        today: loginUserInfo.today,
+        total: loginUserInfo.total,
+        textBox: loginUserInfo.textBox,
+      };
+
+      res.status(200).json(response);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({

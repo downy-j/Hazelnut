@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./Leftbox.css";
 import { UserContext } from "../context/UserContext";
+import { useParams } from "react-router-dom";
 
 function Leftbox({ isCount }) {
   const {
@@ -10,13 +11,23 @@ function Leftbox({ isCount }) {
     preViewBox,
     myProfileImage,
     myProfileImageURL,
-    setPreViewBox,
+
+    user,
+    setThisUser,
+    thisUser,
   } = useContext(UserContext);
 
-  const normalizeImagePath = (imagePath) => {
-    setPreViewBox(null);
-    return imagePath.replace(/\\/g, "/");
-  };
+  const { userNick } = useParams();
+
+  useEffect(() => {
+    if (user === userNick) {
+      // 로그인한사람과 파라메터가 같을때
+      setThisUser(user);
+    } else {
+      //로그인 한사람과 파라메터가 다를때
+      setThisUser(userNick);
+    }
+  }, [thisUser]);
 
   return (
     <div className="leftBox">
@@ -30,12 +41,21 @@ function Leftbox({ isCount }) {
           className="df_jcc_aic"
           src={
             preViewBox === null
-              ? process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+              ? myProfileImageURL === null
+                ? process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+                : myProfileImageURL
               : preViewBox
           }
           alt="my__Image"
         />
-        <input type="file" name="file" onChange={myProfilePreview} />
+        {user && user === userNick && (
+          <input
+            type="file"
+            name="file"
+            accept="image/png, image/jpeg, image/jpg, image/gif"
+            onChange={myProfilePreview}
+          />
+        )}
         {preViewBox && (
           <button onClick={myProfileImage} className="imgSubmitBtn">
             적용하기
