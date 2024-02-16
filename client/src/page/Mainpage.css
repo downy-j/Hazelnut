@@ -39,9 +39,6 @@
 }
 /* right top box */
 .mainBox__right .rightBox .rightTopBox {
-  /* margin-bottom: 10px;
-  padding: 0 20px; */
-
   display: flex;
   justify-content: space-between;
   align-items: center;

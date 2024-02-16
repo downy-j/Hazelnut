@@ -54,9 +54,15 @@ function Mainpage() {
       <div className="mainBox__right df-jcs_aic">
         <div className="rightBox">
           <div className="rightTopBox">
-            <div className="wellcomText" onClick={handleModal}>
-              <span>{isTextBox}</span>
-            </div>
+            {user === userNick ? (
+              <div className="wellcomText" onClick={handleModal}>
+                <span>{isTextBox}</span>
+              </div>
+            ) : (
+              <div className="wellcomText">
+                <span>{isTextBox}</span>
+              </div>
+            )}
             {user && user !== userNick && (
               <div onClick={addFrind} className="addFrind">
                 ➕ <span>친구추가</span>

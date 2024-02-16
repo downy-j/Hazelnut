@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React, { useContext, useEffect } from "react";
 import "./Leftbox.css";
 import { UserContext } from "../context/UserContext";
@@ -46,7 +48,7 @@ function Leftbox({ isCount }) {
                 : myProfileImageURL
               : preViewBox
           }
-          alt="my__Image"
+          alt="Not Found Image"
         />
         {user && user === userNick && (
           <input

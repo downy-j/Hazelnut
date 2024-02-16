@@ -8,7 +8,14 @@ function Note({ currentItems }) {
     <ul>
       {currentItems.map((note, index) => (
         <li key={index}>
-          <img src={process.env.PUBLIC_URL + "/img/main/besicImg.jpg"} alt="" />
+          <img
+            src={
+              note.userImg === null
+                ? process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+                : note.userImg
+            }
+            alt="Not Found Image"
+          />
           <Link to="#">
             <span>{note.userNick}</span>
             <span className="content">{note.content}</span>

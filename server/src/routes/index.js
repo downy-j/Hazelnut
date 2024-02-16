@@ -13,12 +13,12 @@ const tokenCtrl = require("./token/token.ctrl");
 const modulsCtrl = require("./moduls/moduls.ctrl");
 
 // 유저 고유폴더 찾기
-const userFolder = (nick) => {
+const userFolder = (nick, dirType) => {
   const serverDir = path.resolve(__dirname, "..", ".."); // server 폴더까지의 상대 경로 설정
 
   const userDir = path.join(serverDir, "uploads", nick); // 유저의 폴더 경로 설정
 
-  const myImageDir = path.join(userDir, "myImage"); // 유저 폴더 안의 myImage 폴더 경로 설정
+  const myImageDir = path.join(userDir, dirType); // 유저 폴더 안의 myImage 폴더 경로 설정
 
   return myImageDir;
 };
@@ -28,7 +28,7 @@ const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
       const userNick = req.params.userNick;
-      cb(null, userFolder(userNick));
+      cb(null, userFolder(userNick, "myImage"));
     },
 
     filename: function (req, file, cb) {
@@ -41,6 +41,25 @@ const upload = multer({
     },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+// 포스팅사진 등록용 미들웨어
+const postUpload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      const userNick = req.params.userNick;
+      cb(null, userFolder(userNick, "post"));
+    },
+
+    filename: function (req, file, cb) {
+      const userNick = req.params.userNick;
+      const nowDate = new Date().toISOString().slice(0, 10);
+      const fileName = file.originalname;
+      const result = `${userNick}_${nowDate}_${fileName}`;
+
+      cb(null, result);
+    },
+  }),
 });
 
 // 내 이미지 등록, DB에 저장까지
@@ -69,10 +88,12 @@ router.post(
 router.get("/:userNick/posts", postCtrl.gets.findPosts); // 해당 페이지 유저의 게시글 전부 가져오기(방문객 로그인한 나 모두 볼수 있음)
 router.get("/:userNick/post/:postId", postCtrl.gets.findPost); // 해당 페이지 유저의 게시글 하나 가져오기(방문객 로그인한 나 모두 볼수 있음)
 
-router.post("/uploadFiles/post", (req, res) => {
-  modulsCtrl.moduls.uploadFiles(req, res, "post");
-});
-router.post("/post", postCtrl.posts.uploadPost);
+router.post(
+  "/:userNick/post/img",
+  postUpload.single("postImage"),
+  postCtrl.posts.uploadPost
+); // 게시물 사진 등록
+// router.post("/:userNick/post", postCtrl.posts.uploadPost); // 게시물 등록
 
 router.patch("/post/:postId", postCtrl.patchs.updatePost); // 로그인한 내가 내 게시글 수정
 router.delete("/post/:postId", postCtrl.deletes.deletePost); // 로그인한 내가 내 게시글 삭제

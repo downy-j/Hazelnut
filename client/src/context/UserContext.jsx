@@ -28,7 +28,6 @@ export const UserContextProvider = ({ children }) => {
 
   // 내프로필 URL, 내프로필 Name
   const [myProfileImageURL, setMyProfileImageURL] = useState(null); // 서버에서 받은 url
-  const [myProfileImageName, setMyProfileImageName] = useState(""); // 정제된 파일명
   const [isImage, setImage] = useState(null); //
   const [preViewBox, setPreViewBox] = useState(null);
 
@@ -46,7 +45,7 @@ export const UserContextProvider = ({ children }) => {
   const [isInterests, setInterests] = useState([]); // 서버 응답을 담을 배열 상태
 
   // 쪽지 불러오기, 쪽지 보내기
-  const [sendNote, setSendNote] = useState(""); // 입력값을 담을 상태
+  const [noteBox, setNoteBox] = useState(""); // 입력값을 담을 상태
   const [isNotes, setNotes] = useState([]); // 서버 응답을 담을 배열 상태
 
   // 유저찾기
@@ -90,7 +89,6 @@ export const UserContextProvider = ({ children }) => {
 
       const formData = new FormData();
       formData.append("image", isImage);
-      formData.append("fileName", myProfileImageName);
 
       const response = await imgPostRequest(
         `${SERVER_URL}/${thisUser}/profileImage`,
@@ -123,7 +121,6 @@ export const UserContextProvider = ({ children }) => {
           setTotals(totals);
 
           const myImage = JSON.stringify(response.imgURL);
-          console.log(`myImage >> ${myImage}`);
           setMyProfileImageURL(myImage);
 
           const textBox = JSON.stringify(response.textBox);
@@ -209,6 +206,21 @@ export const UserContextProvider = ({ children }) => {
 
     getNotes();
   }, [thisUser]);
+
+  // note (post)
+  const sendNotehandler = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const accToken = getCookies("accessToken");
+      const response = await postRequest(
+        `${SERVER_URL}/${thisUser}/note`,
+        { content: noteBox },
+        accToken
+      );
+    },
+    [thisUser]
+  );
 
   // interest(get)
   useEffect(() => {
@@ -315,7 +327,9 @@ export const UserContextProvider = ({ children }) => {
         addMyInterest,
         setAddInterest,
 
+        sendNotehandler,
         isNotes,
+        setNoteBox,
 
         setThisUser,
         thisUser,

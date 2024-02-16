@@ -50,6 +50,7 @@ function App() {
         path="/:userNick/*"
         element={user ? <Mainpage /> : <AlertMessage />}
       />
+      <Route path="/message" element={<Message />} />
     </Routes>
   );
 }

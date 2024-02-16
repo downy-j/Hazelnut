@@ -5,27 +5,42 @@ import "./Make.css";
 import { PostContext } from "../context/PostContext";
 
 function Make({ makeHandler }) {
-  const { selectedFile, imgSRC, fileHandler, setPostContent, posting } =
-    useContext(PostContext);
+  const {
+    setPreViewPost,
+    preViewPost,
+    postImagePreviewHandler,
+    setPostContent,
+    uploadPost,
+  } = useContext(PostContext);
+
+  const reselectionHandler = () => {
+    setPreViewPost(null);
+  };
 
   return (
     <div className="makeBody">
       <div className="makeBox">
         <div className="makeTitle">
+          {preViewPost === null ? null : (
+            <button className="reselection" onClick={reselectionHandler}>
+              <i className="fa-solid fa-arrow-left"></i>
+            </button>
+          )}
+
           <h3>새 게시물 만들기</h3>
         </div>
-        {selectedFile === null ? (
+        {preViewPost === null ? (
           <div className="makeContent">
             <img src={process.env.PUBLIC_URL + "/img/home/make.png"} alt="" />
             <div className="uploadBtn">
-              <input onChange={(e) => fileHandler(e)} type="file" />
+              <input onChange={(e) => postImagePreviewHandler(e)} type="file" />
               <span>컴퓨터에서 선택</span>
             </div>
           </div>
         ) : (
-          <form className="makeContent" onSubmit={posting}>
+          <form className="makeContent">
             <div className="imgBox">
-              <img src={imgSRC} />
+              <img src={preViewPost} />
             </div>
             <div className="textBox">
               <textarea
@@ -35,7 +50,7 @@ function Make({ makeHandler }) {
                 className="textarea"
               ></textarea>
             </div>
-            <button type="submit">보내기</button>
+            <button onClick={uploadPost}>보내기</button>
           </form>
         )}
 

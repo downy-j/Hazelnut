@@ -23,12 +23,10 @@ export const postRequest = async (url, body, accToken) => {
   try {
     const response = await axios.post(url, body, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accToken}`,
       },
       withCredentials: true,
     });
-    console.log(`response >> ${response.data}`);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));
@@ -45,7 +43,6 @@ export const imgPostRequest = async (url, body, accToken) => {
       },
       withCredentials: true,
     });
-    console.log(`response >> ${response.data}`);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));

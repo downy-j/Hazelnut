@@ -51,6 +51,7 @@ function Sidebar() {
     }
   };
 
+  // 만들기 모달 띄우기
   const makeHandler = () => {
     setMake(!isMake);
     setSearch(false);
@@ -59,15 +60,6 @@ function Sidebar() {
     }
   };
 
-  const messageHandler = () => {
-    setMessage(!isMessage);
-    setSearch(false);
-    if (!isSearch) {
-      document.querySelector(".sideBar__button").style.left = "23%";
-    } else {
-      document.querySelector(".sideBar__button").style.left = "5%";
-    }
-  };
   const logoutHandler = () => {
     userLogout();
     navigate("/");

@@ -10,9 +10,13 @@ import Note from "./Note";
 import { useSelector } from "react-redux";
 import { UserContext } from "../../context/UserContext";
 import AddInterest from "../../modal/AddInterest";
+import { useParams } from "react-router-dom";
 
 function Home() {
-  const { isNotes, thisUser } = useContext(UserContext);
+  const { sendNotehandler, setNoteBox, isNotes, thisUser, user, setThisUser } =
+    useContext(UserContext);
+  const { userNick } = useParams();
+
   // note
   const itemsPerPage = 5; // 페이지당 보여질 아이템 수
   const [currentPage, setCurrentPage] = useState(1); // 디폴트 값
@@ -55,6 +59,16 @@ function Home() {
     setAddInterestModal(!isAddInterestModal);
   };
 
+  useEffect(() => {
+    if (user === userNick) {
+      // 로그인한사람과 파라메터가 같을때
+      setThisUser(user);
+    } else {
+      //로그인 한사람과 파라메터가 다를때
+      setThisUser(userNick);
+    }
+  }, [thisUser]);
+
   return (
     <div className="homeContainer">
       <div className="recentPostBox">
@@ -69,17 +83,20 @@ function Home() {
         <div className="main__text">
           <h3>새소식</h3>
         </div>
-
-        <Newlog />
+        <div className="newLogList">
+          <Newlog />
+        </div>
       </div>
 
       <div className="interestBox">
         <div className="main__text">
           <h3>관심사</h3>
           <div className="addInterestBtn">
-            <button onClick={InterestHandleModal} className="addBtn">
-              ➕
-            </button>
+            {user === userNick ? (
+              <button onClick={InterestHandleModal} className="addBtn">
+                ➕
+              </button>
+            ) : null}
           </div>
         </div>
         {isAddInterestModal ? (
@@ -110,14 +127,18 @@ function Home() {
             </button>
           </div>
         </div>
-        {thisUser ? (
+        {user === userNick ? (
           <div className="noteList">
             <Note currentItems={currentItems} />
           </div>
         ) : (
           <div className="noteSend">
-            <textarea></textarea>
-            <input type="submit" value="보내기" />
+            <textarea
+              onChange={(e) => {
+                setNoteBox(e.target.value);
+              }}
+            ></textarea>
+            <input onClick={sendNotehandler} type="submit" value="보내기" />
           </div>
         )}
       </div>

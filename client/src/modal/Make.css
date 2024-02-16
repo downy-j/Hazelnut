@@ -31,6 +31,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.makeBody .makeBox .makeTitle .reselection {
+  position: relative;
+  right: 35%;
+}
 .makeBody .makeBox .makeTitle h3 {
   font-size: 1.25em;
 }

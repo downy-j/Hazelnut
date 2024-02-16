@@ -1,6 +1,8 @@
 "use strict";
 
 const { User, Post, Hashtag } = require("../../models");
+const { path } = require("path");
+const jwt = require("jsonwebtoken");
 
 const gets = {
   findPosts: async (req, res) => {
@@ -75,37 +77,43 @@ const gets = {
 const posts = {
   uploadPost: async (req, res) => {
     try {
-      const { content, url } = req.body;
-      console.log(`content >> ${content}`);
-      console.log(`url >> ${url}`);
+      const { content } = req.body;
+      const filename = req.file.path;
+      const userNick = req.params.userNick;
 
       const accToken = req.cookies.accessToken;
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
 
+      const findUser = await User.findOne({
+        where: { nick: userNick },
+      });
+
       const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
       const userId = decodedToken.id;
 
-      const post = await Post.create({
-        content,
-        img: url,
-        UserId: userId,
-      });
+      if (findUser.id === userId) {
+        const post = await Post.create({
+          content,
+          img: filename,
+          UserId: userId,
+        });
 
-      const hashtags = req.body.content.match(/#[^\s#]*/g);
-      if (hashtags) {
-        const result = await Promise.all(
-          hashtags.map((tag) => {
-            return Hashtag.findOrCreate({
-              where: { title: tag.slice(1).toLowerCase() },
-            });
-          })
-        );
-        await post.addHashtags(result.map((r) => r[0]));
+        const hashtags = req.body.content.match(/#[^\s#]*/g);
+        if (hashtags) {
+          const result = await Promise.all(
+            hashtags.map((tag) => {
+              return Hashtag.findOrCreate({
+                where: { title: tag.slice(1).toLowerCase() },
+              });
+            })
+          );
+          await post.addHashtags(result.map((r) => r[0]));
+        }
+
+        res.status(200).json(post);
       }
-
-      res.status(200).json(post);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({

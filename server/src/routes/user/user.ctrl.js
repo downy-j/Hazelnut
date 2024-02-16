@@ -433,7 +433,6 @@ const patchs = {
       }
 
       const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
-      console.log(`★ decodedToken >> ${JSON.stringify(decodedToken)}`);
 
       const userNick = req.params.userNick;
 
@@ -444,18 +443,15 @@ const patchs = {
       if (!findUser) {
         return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
       }
-      console.log(`★ findUser >> ${JSON.stringify(findUser)}`);
 
       let userInfo = await UserInfo.findOne({
         where: { UserId: findUser.id },
       });
-      console.log(`★ userInfo >> ${JSON.stringify(userInfo)}`);
 
       // 해당 파라메터와 로그인한 사람이 동일 인물일때만 DB에 값 넣을거
       if (findUser.id === decodedToken.id) {
         // 이미지 정보를 DB에 저장
         const imagePath = req.file.path;
-        console.log(`★ imagePath >> ${imagePath}`);
 
         await userInfo.update({ imgURL: imagePath });
       }
