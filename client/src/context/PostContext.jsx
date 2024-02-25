@@ -1,11 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
-import {
-  SERVER_URL,
-  getRequest,
-  postRequest,
-  imgPostRequest,
-} from "../utile/service";
+import { SERVER_URL, getRequest, postRequest } from "../utile/service";
 import { UserContext } from "./UserContext";
 
 export const PostContext = createContext();
@@ -58,10 +53,11 @@ export const PostContextProvider = ({ children, user }) => {
         formData.append("postImage", isPostImage);
         formData.append("content", postContent);
 
-        const response = imgPostRequest(
+        const response = postRequest(
           `${SERVER_URL}/${thisUser}/post/img`,
           formData,
-          accToken
+          accToken,
+          "multipart/form-data"
         );
 
         if (response.error) {
@@ -74,6 +70,31 @@ export const PostContextProvider = ({ children, user }) => {
     },
     [thisUser, postContent, isPostImage]
   );
+
+  // 게시글 가져오기
+  useEffect(() => {
+    const getAllPosts = async () => {
+      const accToken = getCookies("accessToken");
+      try {
+        if (thisUser) {
+          const response = await getRequest(
+            `${SERVER_URL}/${thisUser}/posts`,
+            accToken
+          );
+          console.log("response >> ", response);
+
+          if (response.error) {
+            console.error("전체 게시물 응답에 실패:", response.error);
+          }
+
+          setPostContent(response);
+        }
+      } catch (error) {
+        console.error("요청에 실패했습니다:", error);
+      }
+    };
+    getAllPosts();
+  }, []);
 
   return (
     <PostContext.Provider

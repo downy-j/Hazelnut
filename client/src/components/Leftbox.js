@@ -50,6 +50,7 @@ function Leftbox({ isCount }) {
           }
           alt="Not Found Image"
         />
+
         {user && user === userNick && (
           <input
             type="file"

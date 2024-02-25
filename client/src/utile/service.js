@@ -11,6 +11,7 @@ export const getRequest = async (url, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("response >> ", response);
 
     return response.data;
   } catch (error) {
@@ -19,26 +20,11 @@ export const getRequest = async (url, token) => {
 };
 
 // POST
-export const postRequest = async (url, body, accToken) => {
+export const postRequest = async (url, body, accToken, contentType) => {
   try {
     const response = await axios.post(url, body, {
       headers: {
-        Authorization: `Bearer ${accToken}`,
-      },
-      withCredentials: true,
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(extractErrorMessage(error));
-  }
-};
-
-// ImgPost
-export const imgPostRequest = async (url, body, accToken) => {
-  try {
-    const response = await axios.post(url, body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": contentType,
         Authorization: `Bearer ${accToken}`,
       },
       withCredentials: true,

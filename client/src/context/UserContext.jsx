@@ -27,7 +27,7 @@ export const UserContextProvider = ({ children }) => {
   const [isTotals, setTotals] = useState("");
 
   // 내프로필 URL, 내프로필 Name
-  const [myProfileImageURL, setMyProfileImageURL] = useState(null); // 서버에서 받은 url
+  const [myProfileImageURL, setMyProfileImageURL] = useState(); // 서버에서 받은 url
   const [isImage, setImage] = useState(null); //
   const [preViewBox, setPreViewBox] = useState(null);
 
@@ -90,10 +90,11 @@ export const UserContextProvider = ({ children }) => {
       const formData = new FormData();
       formData.append("image", isImage);
 
-      const response = await imgPostRequest(
+      const response = await postRequest(
         `${SERVER_URL}/${thisUser}/profileImage`,
         formData,
-        accToken
+        accToken,
+        "multipart/form-data"
       );
 
       // 미리보기 null로 만들기
@@ -114,16 +115,16 @@ export const UserContextProvider = ({ children }) => {
             accToken
           );
 
-          const todays = JSON.stringify(response.today);
+          const todays = response.today;
           setTodays(todays);
 
-          const totals = JSON.stringify(response.total);
+          const totals = response.today;
           setTotals(totals);
 
-          const myImage = JSON.stringify(response.imgURL);
+          const myImage = response.imgURL;
           setMyProfileImageURL(myImage);
 
-          const textBox = JSON.stringify(response.textBox);
+          const textBox = response.textBox;
           setTextBox(textBox);
         }
       } catch (error) {

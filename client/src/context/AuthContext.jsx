@@ -55,7 +55,9 @@ export const AuthContextProvider = ({ children }) => {
 
       const response = await postRequest(
         `${SERVER_URL}/register`,
-        JSON.stringify(isRegisterInfo)
+        JSON.stringify(isRegisterInfo),
+        null,
+        "application/json"
       );
 
       setRegisterLoading(false);
@@ -92,7 +94,9 @@ export const AuthContextProvider = ({ children }) => {
 
       const response = await postRequest(
         `${SERVER_URL}/login`,
-        JSON.stringify(isLoginInfo)
+        JSON.stringify(isLoginInfo),
+        null,
+        "application/json"
       );
 
       setLoginLoading(false);

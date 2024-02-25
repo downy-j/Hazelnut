@@ -3,6 +3,8 @@
 const { User, Post, Interest, Note } = require("../../models");
 const UserInfo = require("../../models/UserInfo");
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs");
 
 // 시간데이터 폼 변경
 const formatDate = (dateString) => {
@@ -33,9 +35,31 @@ const gets = {
         attributes: ["id", "imgURL", "today", "total", "textBox"],
       });
 
+      // 이미지 파일 경로
+      const imagePath = path.join(loginUserInfo.imgURL);
+
+      // 이미지 파일의 확장자 추출
+      const extension = path.extname(imagePath).toLowerCase();
+
+      // 확장자에 따라 MIME 타입 결정
+      let mimeType = "image/jpeg";
+      if (extension === ".png") {
+        mimeType = "image/png";
+      } else if (extension === ".gif") {
+        mimeType = "image/gif";
+      }
+      console.log("mimeType >> ", mimeType);
+
+      // 이미지 파일 읽기
+      const imageData = fs.readFileSync(imagePath);
+
+      // 이미지를 base64로 인코딩하여 데이터 URI 생성
+      const base64Image = Buffer.from(imageData).toString("base64");
+      const dataURI = `data:${mimeType};base64,${base64Image}`;
+
       const response = {
         id: loginUserInfo.id,
-        imgURL: loginUserInfo.imgURL,
+        imgURL: dataURI,
         today: loginUserInfo.today,
         total: loginUserInfo.total,
         textBox: loginUserInfo.textBox,

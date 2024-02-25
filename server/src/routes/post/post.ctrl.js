@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const gets = {
   findPosts: async (req, res) => {
+    console.log("=============================================");
     try {
       const accToken = req.cookies.accessToken;
       if (!accToken) {
