@@ -7,31 +7,22 @@ import Photos from "./Photos";
 import Videos from "./Videos";
 import Saved from "./Saved";
 import { UserContext } from "../../context/UserContext";
+import { useSelector } from "react-redux";
 
 function Profile() {
-  const { thisUser, user, setThisUser } = useContext(UserContext);
+  //  유저 ============================================================
+  const user = useSelector((state) => state.user.nick);
+  const [thisUser, setThisUser] = useState(null);
   const { userNick } = useParams();
-
-  const [isPhotos, setPhotos] = useState([
-    {
-      img: "/img/photos/unaLee.gif",
-    },
-  ]);
-  const [isVideos, setVideos] = useState([
-    {
-      videos: "/img/videos/unaLee.mp4",
-    },
-  ]);
-
   useEffect(() => {
     if (user === userNick) {
       // 로그인한사람과 파라메터가 같을때
-      setThisUser(user);
+      setThisUser(userNick);
     } else {
       //로그인 한사람과 파라메터가 다를때
-      setThisUser(userNick);
+      setThisUser(user);
     }
-  }, [thisUser]);
+  }, [user, userNick]);
 
   return (
     <div className="profileContainer">
@@ -51,18 +42,9 @@ function Profile() {
       </div>
       <div className="convas df_jcc_aic">
         <Routes>
-          <Route
-            path="/photos"
-            element={<Photos isPhotos={isPhotos} />}
-          ></Route>
-          <Route
-            path="/videos"
-            element={<Videos isVideos={isVideos} />}
-          ></Route>
-          <Route
-            path="/saved"
-            element={<Saved isPhotos={isPhotos} isVideos={isVideos} />}
-          ></Route>
+          <Route path="/photos" element={<Photos />}></Route>
+          <Route path="/videos" element={<Videos />}></Route>
+          <Route path="/saved" element={<Saved />}></Route>
         </Routes>
       </div>
     </div>

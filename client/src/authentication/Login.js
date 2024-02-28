@@ -1,5 +1,7 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../Store/UserSlice";
 
 function Login() {
   const [psEye, setPsEye] = useState(false);
@@ -16,17 +18,32 @@ function Login() {
     }
   };
 
-  // AuthContext
-  const {
-    userLogin,
-    isLoginError,
-    isLoginInfo,
-    updateLoginInfo,
-    isLoginLoading,
-  } = useContext(AuthContext);
+  // state
+  const [isLoginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+  const updateLoginInfo = useCallback((info) => {
+    setLoginInfo(info);
+  }, []);
+
+  // redux state
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const loginHandler = (e) => {
+    e.preventDefault();
+    dispatch(loginUser(isLoginInfo)).then((result) => {
+      if (result.payload) {
+        setLoginInfo("");
+        navigate(`/${result.payload.nick}`);
+      }
+    });
+  };
 
   return (
-    <form className="form" onSubmit={userLogin}>
+    <form className="form" onSubmit={loginHandler}>
       <h2>로그인</h2>
 
       <div className="inputBox">
@@ -57,10 +74,8 @@ function Login() {
         </div>
       </div>
       <div className="inputBox">
-        <button type="submit">
-          {isLoginLoading ? "생성중. ." : "계정생성"}
-        </button>
-        {isLoginError?.error && <p>{isLoginError?.message}</p>}
+        <button type="submit">{loading ? "생성중. ." : "계정생성"}</button>
+        {error?.error && <p>{error?.message}</p>}
       </div>
     </form>
   );

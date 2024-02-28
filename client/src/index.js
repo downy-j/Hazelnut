@@ -6,23 +6,23 @@ import reportWebVitals from "./reportWebVitals";
 
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./redux/store/store";
-import { PostContextProvider } from "./context/PostContext";
-import { AuthContextProvider } from "./context/AuthContext";
-import { UserContextProvider } from "./context/UserContext";
+import store from "./Store";
+// import { PostContextProvider } from "./context/PostContext";
+// import { AuthContextProvider } from "./context/AuthContext";
+// import { UserContextProvider } from "./context/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <UserContextProvider>
-        <PostContextProvider>
-          <AuthContextProvider>
-            <App />
-          </AuthContextProvider>
-        </PostContextProvider>
-      </UserContextProvider>
+      {/* <UserContextProvider> */}
+      {/* <PostContextProvider> */}
+      {/* <AuthContextProvider> */}
+      <App />
+      {/* </AuthContextProvider> */}
+      {/* </PostContextProvider> */}
+      {/* </UserContextProvider> */}
     </BrowserRouter>
   </Provider>
 );

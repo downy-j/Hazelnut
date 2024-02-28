@@ -40,7 +40,6 @@ const upload = multer({
       cb(null, result);
     },
   }),
-  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 // 포스팅사진 등록용 미들웨어
@@ -70,6 +69,7 @@ router.post(
 );
 
 // tokenCtrl
+router.get("/getUserData", tokenCtrl.gets.getUserData);
 router.get("/accessToken", tokenCtrl.gets.accessToken);
 router.get("/refreshToken", tokenCtrl.gets.refreshToken);
 
@@ -85,7 +85,7 @@ router.post(
 ); // 회원등록
 
 // postCtrl
-router.get("/:userNick/posts", postCtrl.gets.findPosts); // 해당 페이지 유저의 게시글 전부 가져오기(방문객 로그인한 나 모두 볼수 있음)
+router.get("/:userNick/posts/img", postCtrl.gets.findPostsImg); // 해당 페이지 유저의 게시글 사진만 전부 가져오기(방문객 로그인한 나 모두 볼수 있음)
 router.get("/:userNick/post/:postId", postCtrl.gets.findPost); // 해당 페이지 유저의 게시글 하나 가져오기(방문객 로그인한 나 모두 볼수 있음)
 
 router.post(
@@ -93,7 +93,6 @@ router.post(
   postUpload.single("postImage"),
   postCtrl.posts.uploadPost
 ); // 게시물 사진 등록
-// router.post("/:userNick/post", postCtrl.posts.uploadPost); // 게시물 등록
 
 router.patch("/post/:postId", postCtrl.patchs.updatePost); // 로그인한 내가 내 게시글 수정
 router.delete("/post/:postId", postCtrl.deletes.deletePost); // 로그인한 내가 내 게시글 삭제

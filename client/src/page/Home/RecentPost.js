@@ -3,13 +3,14 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
+import { useSelector } from "react-redux";
 
 function RecentPost() {
-  const { isRecentPosts } = useContext(UserContext);
-
+  // 최신글 불러오기
+  const getPosts = useSelector((state) => state.recent);
   return (
     <ul>
-      {isRecentPosts.map((post, index) => (
+      {getPosts.map((post, index) => (
         <li key={index}>
           <Link to="#">
             <span>사진</span>

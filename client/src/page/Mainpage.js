@@ -13,13 +13,18 @@ import Profile from "./Profile/Profile";
 import { UserContext } from "../context/UserContext";
 
 function Mainpage() {
+  const user = useSelector((state) => state.user.nick);
+  const [thisUser, setThisUser] = useState(null);
   const { userNick } = useParams();
-
-  // user관련
-  const { thisUser, isTextBox, user, setThisUser } = useContext(UserContext);
-
-  // 알람
-  const [isCount, setCount] = useState(0);
+  useEffect(() => {
+    if (user === userNick) {
+      // 로그인한사람과 파라메터가 같을때
+      setThisUser(user);
+    } else {
+      //로그인 한사람과 파라메터가 다를때
+      setThisUser(userNick);
+    }
+  }, [user, userNick]);
 
   // 대화명
   const [isModal, setModal] = useState(false); // 모달 열고 닫고
@@ -32,23 +37,16 @@ function Mainpage() {
     alert("친구를 추가");
   };
 
-  useEffect(() => {
-    if (user === userNick) {
-      // 로그인한사람과 파라메터가 같을때
-      setThisUser(user);
-    } else {
-      //로그인 한사람과 파라메터가 다를때
-      setThisUser(userNick);
-    }
-  }, [thisUser]);
+  // userInfo 불러오기
+  const userInfo = useSelector((state) => state.userInfo);
 
   return (
     <div className="mainBox df_jcc_aic">
       <Sidebar />
-      {isModal ? <Welcomes setModal={setModal} isModal={isModal} /> : null}
+      {isModal ? <Welcomes setModal={setModal} /> : null}
       {<Arlams />}
       <div className="mainBox__left df_jce_aic">
-        <Leftbox isCount={isCount} />
+        <Leftbox />
       </div>
 
       <div className="mainBox__right df-jcs_aic">
@@ -56,11 +54,11 @@ function Mainpage() {
           <div className="rightTopBox">
             {user === userNick ? (
               <div className="wellcomText" onClick={handleModal}>
-                <span>{isTextBox}</span>
+                <span>{userInfo.textBox}</span>
               </div>
             ) : (
               <div className="wellcomText">
-                <span>{isTextBox}</span>
+                <span>{userInfo.textBox}</span>
               </div>
             )}
             {user && user !== userNick && (

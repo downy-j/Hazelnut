@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const SERVER_URL = "http://localhost:5000";
 
-// GET - whit out header
+// GET
 export const getRequest = async (url, token) => {
   try {
     const response = await axios.get(url, {
@@ -11,7 +11,6 @@ export const getRequest = async (url, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response >> ", response);
 
     return response.data;
   } catch (error) {
@@ -59,11 +58,25 @@ export const deleteRequest = async (url, accToken) => {
         Authorization: `Bearer ${accToken}`,
       },
     });
-    console.log(`deleteRequest >> ${JSON.stringify(response)}`);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error));
   }
+};
+
+// 쿠키 가져오기
+export const getCookies = (name) => {
+  const cookies = document.cookie;
+  const cookieArray = cookies.split(";");
+
+  for (let i = 0; i < cookieArray.length; i++) {
+    const cookie = cookieArray[i].trim();
+    if (cookie.startsWith(name + "=")) {
+      const cookieValue = cookie.substring(name.length + 1);
+      return cookieValue;
+    }
+  }
+  return null;
 };
 
 const extractErrorMessage = (error) => {

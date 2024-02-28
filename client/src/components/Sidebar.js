@@ -1,23 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Sidebar.css";
 
 import Search from "../modal/Search";
 import Make from "../modal/Make";
-import Message from "../page/Message";
 
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { logOutUser } from "../Store/UserSlice";
 
 function Sidebar() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.nick); // 로그인 유저
   const navigate = useNavigate();
-
-  const { userLogout } = useContext(AuthContext);
 
   const [isArrow, setArrow] = useState(false); // 닽힘
   const [isSearch, setSearch] = useState(false); // 닫힘
   const [isMake, setMake] = useState(false); // 닫힘
-  const [isMessage, setMessage] = useState(false);
+  // const [isMessage, setMessage] = useState(false);
 
   useEffect(() => {
     if (!isArrow) {
@@ -61,7 +60,7 @@ function Sidebar() {
   };
 
   const logoutHandler = () => {
-    userLogout();
+    dispatch(logOutUser());
     navigate("/");
   };
 
@@ -71,6 +70,11 @@ function Sidebar() {
         <div className="sideBar">
           <div className="sideBar__menu">
             <div className="sideTop_btnBox">
+              <div className="menu__button">
+                <Link to={`/${user}`}>
+                  <img src={process.env.PUBLIC_URL + "/img/main/logo.png"} />
+                </Link>
+              </div>
               <div onClick={searchHandler} className="menu__button">
                 <i className="fa-solid fa-magnifying-glass"></i>
               </div>

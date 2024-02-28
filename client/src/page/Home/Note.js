@@ -17,7 +17,7 @@ function Note({ currentItems }) {
             alt="Not Found Image"
           />
           <Link to="#">
-            <span>{note.userNick}</span>
+            <span>{note.sender}</span>
             <span className="content">{note.content}</span>
             <span>{note.createdAt}</span>
           </Link>

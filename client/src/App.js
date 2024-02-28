@@ -8,42 +8,26 @@ import Mainpage from "./page/Mainpage";
 import Authentication from "./authentication/Authentication";
 
 import { Route, Routes, useParams } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { loginUser } from "./redux/slices/user";
+import { useEffect } from "react";
+import { loginUser, getUserData } from "./Store/UserSlice";
 import AlertMessage from "./modal/AlertMessage";
-import { UserContext } from "./context/UserContext";
 import Message from "./page/Message";
+import { getCookies } from "./utile/service";
 
 function App() {
-  const { thisUser, setThisUser, user } = useContext(UserContext);
+  const user = useSelector((state) => state.user.nick);
 
   const dispatch = useDispatch();
 
-  const isLoading = useSelector((state) => state.data.user.isLoading);
-
   useEffect(() => {
-    const storedUser = localStorage.getItem("User");
+    const accToken = getCookies("accessToken");
 
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      dispatch(loginUser(user));
+    if (accToken) {
+      dispatch(getUserData(accToken));
     }
   }, [dispatch]);
 
-  useEffect(() => {});
-
   return (
-    // <div className="app">
-    //   {isLoading ? (
-    //     <div className="loader-container">
-    //       <div className="loader"></div>
-    //     </div>
-    //   ) : (
-    //     <>{user ? <Mainpage /> : <Authentication />}</>
-    //   )}
-    // </div>
-    // <>{user ? <Mainpage /> : <Authentication />}</>
-
     <Routes>
       <Route path="/" element={<Authentication />} />
       <Route

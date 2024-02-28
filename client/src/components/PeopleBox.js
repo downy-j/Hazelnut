@@ -1,9 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import { UserContext } from "../context/UserContext";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function PeopleBox() {
-  const { searchUserResults } = useContext(UserContext);
+function PeopleBox({ searchUserResults }) {
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -45,3 +45,8 @@
 
   cursor: pointer;
 }
+
+.menu__button img {
+  width: 100%;
+  height: 100%;
+}

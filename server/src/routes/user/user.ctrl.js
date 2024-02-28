@@ -48,7 +48,6 @@ const gets = {
       } else if (extension === ".gif") {
         mimeType = "image/gif";
       }
-      console.log("mimeType >> ", mimeType);
 
       // 이미지 파일 읽기
       const imageData = fs.readFileSync(imagePath);
@@ -161,9 +160,28 @@ const gets = {
       });
 
       const result = receivedNotes.map((note) => {
+        const imagePath = note.Sender.UserInfo.imgURL;
+
+        const extension = path.extname(imagePath).toLowerCase();
+
+        let mimeType = "image/jpeg";
+        if (extension === ".png") {
+          mimeType = "image/png";
+        } else if (extension === ".gif") {
+          mimeType = "image/gif";
+        }
+
+        // 이미지 파일 읽기
+        const imageData = fs.readFileSync(imagePath);
+
+        // 이미지를 base64로 인코딩하여 데이터 URI 생성
+        const base64Image = Buffer.from(imageData).toString("base64");
+        const dataURI = `data:${mimeType};base64,${base64Image}`;
+
         return {
-          userNick: note.Sender.nick,
-          userImg: note.Sender.UserInfo.imgURL,
+          id: note.id,
+          sender: note.Sender.nick,
+          userImg: dataURI,
           content: note.content,
           createdAt: formatDate(note.createdAt),
         };

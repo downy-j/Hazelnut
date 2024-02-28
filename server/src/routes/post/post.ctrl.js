@@ -1,14 +1,21 @@
 "use strict";
 
 const { User, Post, Hashtag } = require("../../models");
-const { path } = require("path");
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs");
+
+// 시간데이터 폼 변경
+const formatDate = (dateString) => {
+  const options = { year: "numeric", month: "numeric", day: "numeric" };
+  return new Date(dateString).toLocaleDateString("ko", options);
+};
 
 const gets = {
-  findPosts: async (req, res) => {
-    console.log("=============================================");
+  findPostsImg: async (req, res) => {
     try {
-      const accToken = req.cookies.accessToken;
+      const accToken =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
       if (!accToken) {
         return res.status(401).json({ error: "토큰이 없습니다." });
       }
@@ -24,9 +31,32 @@ const gets = {
 
       const userPosts = await Post.findAll({
         where: { UserId: findUser.id },
+        attributes: ["id", "img", "updatedAt", "UserId"],
       });
 
-      res.status(200).json(userPosts);
+      const result = userPosts.map((post) => {
+        const imagePath = path.join(post.img);
+        const extension = path.extname(imagePath).toLowerCase();
+
+        let mimeType = "image/jpeg";
+        if (extension === ".png") {
+          mimeType = "image/png";
+        } else if (extension === ".gif") {
+          mimeType = "image/gif";
+        }
+
+        const imageData = fs.readFileSync(imagePath);
+        const base64Image = Buffer.from(imageData).toString("base64");
+        const dataURI = `data:${mimeType};base64,${base64Image}`;
+
+        return {
+          id: post.id,
+          img: dataURI,
+          updatedAt: formatDate(post.updatedAt),
+          UserId: post.UserId,
+        };
+      });
+      res.status(200).json(result);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({

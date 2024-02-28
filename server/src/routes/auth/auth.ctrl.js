@@ -121,7 +121,7 @@ const posts = {
           id: user.id,
           nick: user.nick,
           email: user.email,
-          accessToken: accessToken,
+          // accessToken: accessToken,
         });
       } catch (error) {
         console.error(error);
@@ -200,7 +200,6 @@ const posts = {
         id: user.id,
         nick: user.nick,
         email: user.email,
-        accessToken: accessToken,
       });
 
       createFolder(user.nick);

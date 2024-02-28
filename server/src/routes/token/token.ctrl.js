@@ -50,6 +50,27 @@ const gets = {
       res.status(500).json(error);
     }
   },
+  getUserData: async (req, res) => {
+    const accToken =
+      req.headers.authorization && req.headers.authorization.split(" ")[1];
+    if (!accToken) {
+      return res.status(401).json({ error: "토큰이 없습니다." });
+    }
+
+    const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+
+    const findUserData = await User.findOne({
+      where: { nick: decodedToken.nick },
+      attributes: ["id", "nick", "email"],
+    });
+
+    const response = {
+      id: findUserData.id,
+      nick: findUserData.nick,
+      email: findUserData.email,
+    };
+    res.status(200).json(response);
+  },
 };
 
 module.exports = {
