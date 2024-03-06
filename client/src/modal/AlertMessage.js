@@ -1,6 +1,4 @@
-import React, { useContext } from "react";
 import "./AlertMessage.css";
-import { UserContext } from "../context/UserContext";
 
 function AlertMessage() {
   return (

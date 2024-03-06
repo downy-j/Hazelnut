@@ -7,6 +7,7 @@ import Make from "../modal/Make";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../Store/UserSlice";
+import { getCookies } from "../utile/service";
 
 function Sidebar() {
   const dispatch = useDispatch();
@@ -60,7 +61,8 @@ function Sidebar() {
   };
 
   const logoutHandler = () => {
-    dispatch(logOutUser());
+    const accToken = getCookies("accessToken");
+    dispatch(logOutUser(accToken));
     navigate("/");
   };
 

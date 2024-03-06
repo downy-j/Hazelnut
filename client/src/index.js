@@ -10,19 +10,16 @@ import store from "./Store";
 // import { PostContextProvider } from "./context/PostContext";
 // import { AuthContextProvider } from "./context/AuthContext";
 // import { UserContextProvider } from "./context/UserContext";
+import { ChatContextProvider } from "./context/ChatContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      {/* <UserContextProvider> */}
-      {/* <PostContextProvider> */}
-      {/* <AuthContextProvider> */}
-      <App />
-      {/* </AuthContextProvider> */}
-      {/* </PostContextProvider> */}
-      {/* </UserContextProvider> */}
+      <ChatContextProvider>
+        <App />
+      </ChatContextProvider>
     </BrowserRouter>
   </Provider>
 );

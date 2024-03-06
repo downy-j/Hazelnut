@@ -38,24 +38,6 @@ function AddInterest({ setAddInterestModal }) {
       }, 10);
     });
   };
-  // const addMyInterest = useCallback(
-  //   async (e) => {
-  //     e.preventDefault();
-
-  //     const accToken = getCookies("accessToken");
-  //     const response = postRequest(
-  //       `${SERVER_URL}/interest`,
-  //       { interest: addInterest },
-  //       accToken,
-  //       "application/json"
-  //     );
-
-  //     if (response.error) {
-  //       console.error(response);
-  //     }
-  //   },
-  //   [addInterest]
-  // );
 
   return (
     <form className="addInterestContainer df-jcc-aic" onSubmit={addMyInterest}>

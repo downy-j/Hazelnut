@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PeopleBox({ searchUserResults }) {
+  console.log("searchUserResults >> ", searchUserResults);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,12 +17,16 @@ function PeopleBox({ searchUserResults }) {
         searchUserResults.map((user, index) => (
           <li key={index} className="peopleBox">
             <img
-              src={process.env.PUBLIC_URL + "/img/main/besicImg.jpg"}
+              src={
+                user.imgURL
+                  ? user.imgURL
+                  : process.env.PUBLIC_URL + "/img/main/besicImg.jpg"
+              }
               alt="user_img"
             />
             <div className="userInfo">
               <span className="user_Name">{user.nick}</span>
-              <span className="user_Text">{user.UserInfo.textBox}</span>
+              <span className="user_Text">{user.textBox}</span>
             </div>
             <div className="LinkBtn">
               <button

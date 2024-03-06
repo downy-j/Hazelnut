@@ -57,8 +57,18 @@ const gets = {
     }
   },
 
-  logout: (req, res) => {
+  logout: async (req, res) => {
     try {
+      const accToken = req.cookies.accessToken;
+      if (!accToken) {
+        return res.status(401).json({ error: "토큰이 없습니다." });
+      }
+
+      const decodedToken = jwt.verify(accToken, process.env.ACCESS_SECRET);
+      const userid = decodedToken.id;
+
+      await User.update({ socketId: null }, { where: { id: userid } });
+
       res.cookie("accessToken", "");
       res.cookie("refreshToken", "");
       res.status(200).json("Logout Success");
@@ -121,7 +131,7 @@ const posts = {
           id: user.id,
           nick: user.nick,
           email: user.email,
-          // accessToken: accessToken,
+          accessToken: accessToken,
         });
       } catch (error) {
         console.error(error);

@@ -115,6 +115,9 @@ router.delete("/:userNick/unfollow", userCtrl.deletes.unfollow); // 로그인한
 router.delete("/note/:noteId", userCtrl.deletes.note); // 로그인한 내가 내 쪽지 삭제
 router.delete("/interest/:interestId", userCtrl.deletes.interest); // 로그인한 내가 내 관심사 삭제
 
-// chat 컨트롤러 - 모델 아직 안만들어짐
+// chat 컨트롤러 - 모델 아직 안만들어짐 - 소켓통신으로 진행
+router.get("/message/getRooms", chatCtrl.gets.getRooms);
+router.post("/message/createChatRoom", chatCtrl.posts.createChat);
+router.get("/message/nowRoom");
 
 module.exports = router;

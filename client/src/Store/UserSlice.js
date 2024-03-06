@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { SERVER_URL, postRequest, getRequest } from "../utile/service";
+import socket from "../server";
 
 // 로그인
 export const loginUser = createAsyncThunk(
@@ -11,6 +12,11 @@ export const loginUser = createAsyncThunk(
       null,
       "application/json"
     );
+
+    if (response) {
+      socket.emit("userLogin", response);
+    }
+
     localStorage.setItem("User", JSON.stringify(response));
     return response;
   }
@@ -22,6 +28,11 @@ export const getUserData = createAsyncThunk(
   async (accToken) => {
     try {
       const response = await getRequest(`${SERVER_URL}/getUserData`, accToken);
+
+      // if (response) {
+      //   socket.emit("refresh", response);
+      // }
+
       return response;
     } catch (error) {
       throw new Error("사용자 정보를 불러오는데 실패했습니다.");
@@ -44,15 +55,18 @@ export const registerUser = createAsyncThunk(
 );
 
 // 로그아웃
-export const logOutUser = createAsyncThunk("user/logOutUser", async () => {
-  try {
-    localStorage.removeItem("User");
+export const logOutUser = createAsyncThunk(
+  "user/logOutUser",
+  async (accToken) => {
+    try {
+      localStorage.removeItem("User");
 
-    await postRequest(`${SERVER_URL}/logout`);
-  } catch (error) {
-    console.error(error);
+      await postRequest(`${SERVER_URL}/logout`, accToken);
+    } catch (error) {
+      console.error(error);
+    }
   }
-});
+);
 
 const userSlice = createSlice({
   name: "user",

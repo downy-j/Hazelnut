@@ -35,36 +35,38 @@ const gets = {
         attributes: ["id", "imgURL", "today", "total", "textBox"],
       });
 
-      // 이미지 파일 경로
-      const imagePath = path.join(loginUserInfo.imgURL);
+      if (loginUserInfo.imgURL !== null) {
+        // 이미지 파일 경로
+        const imagePath = path.join(loginUserInfo.imgURL);
 
-      // 이미지 파일의 확장자 추출
-      const extension = path.extname(imagePath).toLowerCase();
+        // 이미지 파일의 확장자 추출
+        const extension = path.extname(imagePath).toLowerCase();
 
-      // 확장자에 따라 MIME 타입 결정
-      let mimeType = "image/jpeg";
-      if (extension === ".png") {
-        mimeType = "image/png";
-      } else if (extension === ".gif") {
-        mimeType = "image/gif";
+        // 확장자에 따라 MIME 타입 결정
+        let mimeType = "image/jpeg";
+        if (extension === ".png") {
+          mimeType = "image/png";
+        } else if (extension === ".gif") {
+          mimeType = "image/gif";
+        }
+
+        // 이미지 파일 읽기
+        const imageData = fs.readFileSync(imagePath);
+
+        // 이미지를 base64로 인코딩하여 데이터 URI 생성
+        const base64Image = Buffer.from(imageData).toString("base64");
+        const dataURI = `data:${mimeType};base64,${base64Image}`;
+
+        const response = {
+          id: loginUserInfo.id,
+          imgURL: dataURI,
+          today: loginUserInfo.today,
+          total: loginUserInfo.total,
+          textBox: loginUserInfo.textBox,
+        };
+
+        res.status(200).json(response);
       }
-
-      // 이미지 파일 읽기
-      const imageData = fs.readFileSync(imagePath);
-
-      // 이미지를 base64로 인코딩하여 데이터 URI 생성
-      const base64Image = Buffer.from(imageData).toString("base64");
-      const dataURI = `data:${mimeType};base64,${base64Image}`;
-
-      const response = {
-        id: loginUserInfo.id,
-        imgURL: dataURI,
-        today: loginUserInfo.today,
-        total: loginUserInfo.total,
-        textBox: loginUserInfo.textBox,
-      };
-
-      res.status(200).json(response);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({
@@ -260,7 +262,41 @@ const gets = {
           .json({ error: "해당 닉네임을 가진 사용자를 찾을 수 없습니다." });
       }
 
-      res.status(200).json(userWithInfo);
+      const response = userWithInfo.map((user) => {
+        const userInfo = user.UserInfo;
+
+        if (userInfo) {
+          const imagePath = path.join(userInfo.imgURL);
+          const extension = path.extname(imagePath).toLowerCase();
+          let mimeType = "image/jpeg";
+          if (extension === ".png") {
+            mimeType = "image/png";
+          } else if (extension === ".gif") {
+            mimeType = "image/gif";
+          }
+
+          const imageData = fs.readFileSync(imagePath);
+          const base64Image = Buffer.from(imageData).toString("base64");
+          const dataURI = `data:${mimeType};base64,${base64Image}`;
+          return {
+            id: user.id,
+            nick: user.nick,
+            email: user.email,
+            imgURL: dataURI,
+            textBox: userInfo.textBox,
+          };
+        } else {
+          return {
+            id: user.id,
+            nick: user.nick,
+            email: user.email,
+            imgURL: null,
+            textBox: null,
+          };
+        }
+      });
+
+      res.status(200).json(response);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         res.status(401).json({
