@@ -17,8 +17,18 @@ export const loginUser = createAsyncThunk(
       socket.emit("userLogin", response);
     }
 
-    localStorage.setItem("User", JSON.stringify(response));
-    return response;
+    return new Promise((resolve, reject) => {
+      socket.on("loginSuccess", (userData) => {
+        localStorage.setItem("User", JSON.stringify(userData));
+        resolve(userData);
+      });
+    });
+
+    // socket.on("loginSuccess", (userData) => {
+    //   localStorage.setItem("User", JSON.stringify(userData));
+    // });
+
+    // return response;
   }
 );
 
@@ -29,11 +39,16 @@ export const getUserData = createAsyncThunk(
     try {
       const response = await getRequest(`${SERVER_URL}/getUserData`, accToken);
 
-      // if (response) {
-      //   socket.emit("refresh", response);
-      // }
+      if (response) {
+        socket.emit("refresh", response);
+      }
 
-      return response;
+      return new Promise((resolve, reject) => {
+        socket.on("refreshSuccess", (userData) => {
+          localStorage.setItem("User", JSON.stringify(userData));
+          resolve(userData);
+        });
+      });
     } catch (error) {
       throw new Error("사용자 정보를 불러오는데 실패했습니다.");
     }
@@ -74,6 +89,7 @@ const userSlice = createSlice({
     id: null,
     nick: null,
     email: null,
+    socketId: null,
     isLoading: false,
     error: null,
   },
@@ -88,6 +104,7 @@ const userSlice = createSlice({
         state.id = action.payload.id; // 사용자 ID 설정
         state.nick = action.payload.nick; // 사용자 닉네임 설정
         state.email = action.payload.email; // 사용자 이메일 설정
+        state.socketId = action.payload.socketId; // 소켓 ID 설정
         state.error = null; // 에러 초기화
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -104,6 +121,7 @@ const userSlice = createSlice({
         state.id = action.payload.id; // 사용자 ID 설정
         state.nick = action.payload.nick; // 사용자 닉네임 설정
         state.email = action.payload.email; // 사용자 이메일 설정
+        state.socketId = action.payload.socketId; // 소켓 ID 설정
         state.error = null; // 에러 초기화
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -120,6 +138,7 @@ const userSlice = createSlice({
         state.id = action.payload.id; // 사용자 ID 설정
         state.nick = action.payload.nick; // 사용자 닉네임 설정
         state.email = action.payload.email; // 사용자 이메일 설정
+        state.socketId = action.payload.socketId; // 소켓 ID 설정
         state.error = null; // 에러 초기화
       })
       .addCase(getUserData.rejected, (state, action) => {

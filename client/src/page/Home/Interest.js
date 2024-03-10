@@ -46,7 +46,6 @@ function Interest() {
 
   // interest 불러오기
   const interest = useSelector((state) => state.interest);
-  console.log("interest >> ", interest);
 
   // interest 페이지 기능 ==================================================
   const [isHover, setHover] = useState(new Array(interest.length).fill(false));

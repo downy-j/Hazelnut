@@ -20,6 +20,12 @@ export const ChatContextProvider = ({ children }) => {
 
   const [myRooms, setMyRooms] = useState([]); // 함께 채팅 할 유저
 
+  const [roomNumber, setRoomNumber] = useState(null);
+  const [message, setMessage] = useState(null); // 메시지 담을 그릇
+  const [guest, setGuest] = useState(null);
+  const [guestImg, setGuestImg] = useState(null);
+  const [messageList, setMessageList] = useState([]); // 채팅 목록
+  // console.log("messageList >> ", messageList);
   // 유저정보 가져오기 - 유저 찾기
   useEffect(() => {
     const findUser = async () => {
@@ -56,27 +62,6 @@ export const ChatContextProvider = ({ children }) => {
       }
     );
   };
-  // const createChatRooms = useCallback(
-  //   async (e) => {
-  //     e.preventDefault();
-
-  //     const accToken = getCookies("accessToken");
-  // const response = await postRequest(
-  //   `${SERVER_URL}/message/createChatRoom`,
-  //   {
-  //     chatRoomName: chatRoomName,
-  //     clickedUser: clickedUser,
-  //   },
-  //   accToken,
-  //   "application/json"
-  // );
-
-  //     if (response.error) {
-  //       console.error("요청에러", response.error);
-  //     }
-  //   },
-  //   [chatRoomName, clickedUser]
-  // );
 
   // 내 채팅방 가져오기
   useEffect(() => {
@@ -86,21 +71,39 @@ export const ChatContextProvider = ({ children }) => {
     socket.on("successRoomList", (data) => {
       setMyRooms(data.response.roomNames);
     });
-  }, []);
+  }, [user]);
 
-  // useEffect(() => {
-  //   const getMyChatRooms = async () => {
-  //     const accToken = getCookies("accessToken");
-  //     if (accToken) {
-  //       const response = await getRequest(
-  //         `${SERVER_URL}/message/getRooms`,
-  //         accToken
-  //       );
-  //       console.log("response >> ", response);
-  //       setMyRooms(response);
-  //     }
-  //   };
-  // }, []);
+  // 선택한 채팅 대화방 열기
+  const clickThisRoom = useCallback(
+    async (roomId) => {
+      await setRoomNumber(roomId.id);
+
+      // 선택한 방의 메시지 목록 가져오기
+      socket.emit("getMessages", { roomNumber });
+
+      socket.on("thisRoomsChatList", ({ response }) => {
+        setMessageList(response);
+      });
+    },
+    [roomNumber]
+  );
+
+  // 메시지 보내기
+  const sendMyMessage = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      socket.emit("sendMessage", { message, roomNumber });
+    },
+    [roomNumber, message]
+  );
+
+  // 보낸 메시지 가져오기
+  useEffect(() => {
+    socket.on("message", (response) => {
+      setMessageList((messageList) => [...messageList, response]);
+    });
+  }, []);
 
   return (
     <ChatContext.Provider
@@ -111,6 +114,11 @@ export const ChatContextProvider = ({ children }) => {
         createChatRooms,
         setClickedUser,
         myRooms,
+        clickThisRoom,
+        message,
+        setMessage,
+        sendMyMessage,
+        messageList,
       }}
     >
       {children}

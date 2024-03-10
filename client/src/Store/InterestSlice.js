@@ -10,12 +10,11 @@ import {
 export const getInterests = createAsyncThunk(
   "user/getInterest",
   async ({ accToken, thisUser }) => {
-    console.log("thisUser >> ", thisUser);
     const response = await getRequest(
       `${SERVER_URL}/${thisUser}/interest`,
       accToken
     );
-    console.log("getInterests_response >> ", response);
+
     return response;
   }
 );

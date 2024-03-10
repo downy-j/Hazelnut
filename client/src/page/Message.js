@@ -5,15 +5,17 @@ import "./Message.css";
 import Sidebar from "../components/Sidebar";
 import CreateRoom from "../modal/CreateRoom";
 import { ChatContext } from "../context/ChatContext";
+import MessageContainer from "./Message/MessageContainer";
+import SendInputContainer from "./Message/SendInputContainer";
 
 function Message() {
-  const { myRooms } = useContext(ChatContext);
-  console.log("myRooms >> ", myRooms);
+  const { myRooms, clickThisRoom } = useContext(ChatContext);
 
-  const [creatRoom, setCreateRoom] = useState(false); // 방모달
+  const [creatRoom, setCreateRoom] = useState(false); // 방 생성 모달
   const createRoomHandler = () => {
     setCreateRoom(!creatRoom);
   };
+
   return (
     <div className="chatContainer df_jcc_aic">
       <Sidebar />
@@ -30,7 +32,7 @@ function Message() {
             <ul>
               {myRooms.length > 0 ? (
                 myRooms.map((myRoom, index) => (
-                  <li key={index}>
+                  <li key={index} onClick={() => clickThisRoom(myRoom)}>
                     <div className="ChatFrontImgs">
                       {myRoom.members &&
                         myRoom.members.map((member, memberIndex) => (
@@ -62,7 +64,10 @@ function Message() {
         </div>
       </div>
       <div className="messageBox df-jcs_aic">
-        <div className="message"></div>
+        <div className="message">
+          <MessageContainer />
+          <SendInputContainer />
+        </div>
       </div>
     </div>
   );

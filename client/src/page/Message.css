@@ -36,6 +36,9 @@
   border: 1px solid white;
 
   padding: 15px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* messageBox */
@@ -234,4 +237,97 @@
 }
 .ChatListBox li:hover span {
   color: #000;
+}
+
+/* messageBody */
+.messageBody {
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+
+  flex: 0.95;
+}
+.systemMeaasgeBox {
+  background-color: #55667758;
+  border-radius: 100px;
+  text-align: center;
+  color: white;
+  padding: 2px 15px;
+  font-size: 14px;
+}
+.myMessageBox {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+.myMessageBox .myMessage {
+  background-color: darkgray;
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 200px;
+  font-size: 12px;
+}
+.yourMessageBox .profileImage {
+  width: 38px;
+  height: 38px;
+  border-radius: 100px;
+  margin-right: 10px;
+}
+.yourMessageBox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.yourMessageBox .yourMessage {
+  background-color: dimgrey;
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 200px;
+  font-size: 12px;
+}
+
+/* sendMessageBody */
+.sendMessageBody {
+  border: 1px solid #ffffff;
+  min-height: 50px;
+  display: flex;
+
+  width: 100%;
+  margin-top: 10px;
+  flex: 0.05;
+}
+.plusBtn {
+  background-color: lightslategray;
+  width: 50px;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+.messageInputBox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  padding-left: 5px;
+}
+.sendBtn {
+  min-width: 70px;
+  border-radius: 0;
+  background-color: #f7e600;
+  border: none;
+}
+.sendBtn:hover {
+  cursor: pointer;
+}
+.sendBtn:active {
+  background-color: yellow;
 }

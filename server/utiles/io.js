@@ -1,4 +1,4 @@
-const { User, Chat, UserInfo } = require("../src/models");
+const { User, Chat, UserInfo, Message } = require("../src/models");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
@@ -24,13 +24,44 @@ module.exports = function (io) {
     socket.on("userLogin", async (getResponse) => {
       if (getResponse) {
         try {
-          await User.update(
-            { socketId: socket.id },
-            { where: { id: getResponse.id } }
-          );
-          console.log("유저 소켓id 업데이트 :", socket.id);
+          const userId = getResponse.id;
+          await User.update({ socketId: socket.id }, { where: { id: userId } });
+          const user = await User.findOne({ where: { id: userId } });
+
+          const response = {
+            id: user.id,
+            nick: user.nick,
+            email: user.email,
+            socketId: user.socketId,
+          };
+
+          console.log(`유저 ${user.nick} 소켓id 업데이트 :`, socket.id);
+          socket.emit("loginSuccess", response);
         } catch (error) {
-          console.error("유저 소켓id 업데이트 에러:", error);
+          console.error(`유저 ${user.nick}  소켓id 업데이트 에러:`, error);
+        }
+      }
+    });
+
+    // 새로고침시 유저 소켓id 재발급
+    socket.on("refresh", async (getResponse) => {
+      if (getResponse) {
+        try {
+          const userId = getResponse.id;
+          await User.update({ socketId: socket.id }, { where: { id: userId } });
+          const user = await User.findOne({ where: { id: userId } });
+
+          const response = {
+            id: user.id,
+            nick: user.nick,
+            email: user.email,
+            socketId: user.socketId,
+          };
+
+          console.log(`유저 ${user.nick}  소켓id 재발급 :`, socket.id);
+          socket.emit("refreshSuccess", response);
+        } catch (error) {
+          console.error(`유저 소켓id 재발급 에러:`, error);
         }
       }
     });
@@ -135,6 +166,89 @@ module.exports = function (io) {
             error: "서버 오류",
           });
         }
+      }
+    });
+
+    // 메시지 저장
+    socket.on("sendMessage", async ({ message, roomNumber }) => {
+      try {
+        // 소켓Id로 유저찾고
+        const user = await User.findOne({ where: { socketId: socket.id } });
+
+        // 새 매시지 등록
+        const newMessage = await Message.create({
+          text: message,
+          ChatId: roomNumber,
+        });
+
+        // 중간테이블 MessageId값과 UserId값 넣어 연결하기
+        await newMessage.addUser(user.id);
+
+        const findThisRoomsMessage = await Message.findAll({
+          where: { ChatId: roomNumber },
+          attributes: ["id", "text"],
+          include: [
+            {
+              model: User,
+              through: "UserMessage",
+              attributes: ["id", "nick", "socketId"],
+              include: [
+                {
+                  model: UserInfo,
+                  attributes: ["id", "imgURL"],
+                },
+              ],
+            },
+          ],
+        });
+
+        const response = findThisRoomsMessage.map((message) => ({
+          userProfileImg: getDataURI(message.Users[0].UserInfo.imgURL),
+          userNick: message.Users[0].nick,
+          userSocketId: message.Users[0].socketId,
+          messageText: message.text,
+        }));
+
+        // 등록된 메시지를 클라이언트로 다시 보내기
+        socket.emit("message", { response });
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    // 방번호별 메시지 보내기
+    socket.on("getMessages", async ({ roomNumber }) => {
+      try {
+        // 방번호와 일치하는 메시지 전체 가져오기
+        const findThisRoomsMessage = await Message.findAll({
+          where: { ChatId: roomNumber },
+          attributes: ["id", "text"],
+          include: [
+            {
+              model: User,
+              through: "UserMessage",
+              attributes: ["id", "nick", "socketId"],
+              include: [
+                {
+                  model: UserInfo,
+                  attributes: ["id", "imgURL"],
+                },
+              ],
+            },
+          ],
+        });
+
+        const response = findThisRoomsMessage.map((message) => ({
+          userProfileImg: getDataURI(message.Users[0].UserInfo.imgURL),
+          userNick: message.Users[0].nick,
+          userSocketId: message.Users[0].socketId,
+          messageText: message.text,
+        }));
+
+        // 전체 메시지 보내기
+        socket.emit("thisRoomsChatList", { response });
+      } catch (error) {
+        console.error(error);
       }
     });
 

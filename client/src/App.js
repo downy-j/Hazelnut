@@ -9,7 +9,7 @@ import Authentication from "./authentication/Authentication";
 
 import { Route, Routes, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { loginUser, getUserData } from "./Store/UserSlice";
+import { getUserData } from "./Store/UserSlice";
 import AlertMessage from "./modal/AlertMessage";
 import Message from "./page/Message";
 import { getCookies } from "./utile/service";

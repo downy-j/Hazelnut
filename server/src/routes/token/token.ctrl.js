@@ -61,13 +61,14 @@ const gets = {
 
     const findUserData = await User.findOne({
       where: { nick: decodedToken.nick },
-      attributes: ["id", "nick", "email"],
+      attributes: ["id", "nick", "email", "socketId"],
     });
 
     const response = {
       id: findUserData.id,
       nick: findUserData.nick,
       email: findUserData.email,
+      socketId: findUserData.socketId,
     };
     res.status(200).json(response);
   },
